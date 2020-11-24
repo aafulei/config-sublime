@@ -1,0 +1,9 @@
+{
+    "description": "Helper Functions for Marks",
+    "platforms": [
+        "*"
+    ],
+    "sublime_text": "*",
+    "url": "Managed",
+    "version": "1.0"
+}

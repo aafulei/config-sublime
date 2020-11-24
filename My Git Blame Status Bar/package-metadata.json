@@ -1,0 +1,9 @@
+{
+    "description": "Show Git Blame in Status Bar",
+    "platforms": [
+        "*"
+    ],
+    "sublime_text": "*",
+    "url": "Managed",
+    "version": "1.0"
+}

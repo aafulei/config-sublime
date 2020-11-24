@@ -1,0 +1,36 @@
+{
+	"bootstrapped": true,
+	"debug": true,
+	"in_process_packages":
+	[
+	],
+	"installed_packages":
+	[
+		"A File Icon",
+		"Clang Format",
+		"Deselect",
+		"Expand Selection to Line Upwards",
+		"Expand Selection to Quotes",
+		"ExpandRegion",
+		"MarkAndMove",
+		"Move By Paragraph",
+		"My Expand Cut",
+		"My Friendly Mark",
+		"My Git Blame Status Bar",
+		"My Go To Last Edit",
+		"My New File",
+		"My Own Macros",
+		"My Own Snippets",
+		"My Show At Top Center",
+		"OpenHere",
+		"Origami",
+		"Outline",
+		"Package Control",
+		"PackageResourceViewer",
+		"RemoteSubl",
+		"Save Copy As",
+		"SideBarTools",
+		"Switch View in Group",
+		"ToggleSettings"
+	]
+}

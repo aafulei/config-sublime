@@ -1,0 +1,9 @@
+{
+    "description": "Scroll to Bring Current Line to Top / Center of Screen",
+    "platforms": [
+        "*"
+    ],
+    "sublime_text": "*",
+    "url": "Managed",
+    "version": "1.0"
+}

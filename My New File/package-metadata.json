@@ -1,0 +1,9 @@
+{
+    "description": "Set Current Folder as Default for a New File",
+    "platforms": [
+        "*"
+    ],
+    "sublime_text": "*",
+    "url": "Managed",
+    "version": "1.0"
+}

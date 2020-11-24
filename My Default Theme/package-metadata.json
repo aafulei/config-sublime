@@ -1,0 +1,9 @@
+{
+    "description": "My Default Theme",
+    "platforms": [
+        "*"
+    ],
+    "sublime_text": "*",
+    "url": "Managed",
+    "version": "1.0"
+}

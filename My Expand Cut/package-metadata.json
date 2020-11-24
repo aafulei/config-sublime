@@ -1,0 +1,9 @@
+{
+    "description": "Expand Selection to Word / Line and Cut",
+    "platforms": [
+        "*"
+    ],
+    "sublime_text": "*",
+    "url": "Managed",
+    "version": "1.0"
+}

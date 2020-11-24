@@ -1,0 +1,9 @@
+{
+    "description": "My Own Macros",
+    "platforms": [
+        "*"
+    ],
+    "sublime_text": "*",
+    "url": "Managed",
+    "version": "1.0"
+}
