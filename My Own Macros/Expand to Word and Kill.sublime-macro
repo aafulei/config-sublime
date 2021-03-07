@@ -1,0 +1,19 @@
+[
+    {
+        "command": "expand_selection",
+        "args":
+        {
+            "to": "word"
+        }
+    },
+    {
+        "command": "add_to_kill_ring",
+        "args":
+        {
+            "forward": false
+        }
+    },
+    {
+        "command": "left_delete"
+    }
+]

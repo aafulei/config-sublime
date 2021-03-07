@@ -1,6 +1,8 @@
 .DS_Store
-.extracted-sublime-package
 .pyc
+temp*
 */
+!Default/
+!Default/*
 !My*/
 !User/

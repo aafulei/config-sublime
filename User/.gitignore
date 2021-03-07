@@ -1,6 +1,2 @@
-*
-!.gitignore
-!*.sublime-keymap
-!Package Control.sublime-settings
-!Preferences.sublime-settings
-!My*.sublime-settings
+*.old
+*.user-ca-bundle
