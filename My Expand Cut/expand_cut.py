@@ -221,7 +221,7 @@ class CutToMarkCommand(sublime_plugin.TextCommand):
 class GoToMarkCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         self.view.run_command("next_bookmark", {"name": "mark"})
-
+        self.view.run_command("clear_bookmarks", {"name": "mark"})
 
 
 # https://forum.sublimetext.com/t/move-caret-to-beginning-or-end-of-selection-without-losing-selection/29329/2
