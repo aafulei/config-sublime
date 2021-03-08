@@ -313,18 +313,24 @@
     { "keys": ["alt+n"], "command": "find_next", "context": [ { "key": "panel", "operand": "incremental_find" }, { "key": "panel_has_focus" } ] },
     { "keys": ["alt+n"], "command": "find_next", "context": [ { "key": "panel", "operand": "replace" }, { "key": "panel_has_focus" } ] },
     { "keys": ["alt+o"], "command": "toggle_show_open_files" },
-    { "keys": ["alt+p"], "command": "next_misspelling" },
+    { "keys": ["alt+p"], "command": "prev_result" },
     { "keys": ["alt+p"], "command": "find_prev", "context": [ { "key": "panel", "operand": "find" }, { "key": "panel_has_focus" } ] },
     { "keys": ["alt+p"], "command": "find_prev", "context": [ { "key": "panel", "operand": "incremental_find" }, { "key": "panel_has_focus" } ] },
     { "keys": ["alt+p"], "command": "find_prev", "context": [ { "key": "panel", "operand": "replace" }, { "key": "panel_has_focus" } ] },
     { "keys": ["alt+q"], "command": "change_selection_endpoint" },
     { "keys": ["alt+r"], "command": "cycle" },
     { "keys": ["alt+r"], "command": "toggle_regex", "context": [ { "key": "setting.is_widget", "operator": "equal", "operand": true } ] },
+    { "keys": ["alt+s"], "command": "prev_misspelling" },
     { "keys": ["alt+s"], "command": "toggle_in_selection", "context": [ { "key": "setting.is_widget", "operator": "equal", "operand": true } ] },
     { "keys": ["alt+w"], "command": "toggle_whole_word", "context": [ { "key": "setting.is_widget", "operator": "equal", "operand": true } ] },
     { "keys": ["alt+w"], "command": "toggle_setting", "args": { "setting": "word_wrap" },  "context": [ { "key": "setting.is_widget", "operator": "equal", "operand": false } ] },
+    { "keys": ["alt+x"], "command": "next_misspelling" },
     { "keys": ["alt+x"], "command": "toggle_show_context", "context": [ { "key": "setting.is_widget", "operator": "equal", "operand": true } ] },
     { "keys": ["alt+y"], "command": "select_lines", "args": { "forward": false } },
+    // ------ [P] Switch View in Group --------------------------------------------------------------------------------
+    { "keys": ["alt+["], "command": "prev_view_in_group" },
+    { "keys": ["alt+]"], "command": "next_view_in_group" },
+    // ----------------------------------------------------------------------------------------------------------------
     { "keys": ["alt+;"], "command": "expand_cut_subword"},
     { "keys": ["alt+."], "command": "swap_with_mark"},
     // ----- layout ---------------------------------------------------------------------------------------------------
@@ -339,10 +345,6 @@
     { "keys": ["alt+8"], "command": "select_by_index", "args": { "index": 7 } },
     { "keys": ["alt+9"], "command": "select_by_index", "args": { "index": 8 } },
     { "keys": ["alt+0"], "command": "select_by_index", "args": { "index": 9 } },
-    // ------ [P] Switch View in Group --------------------------------------------------------------------------------
-    { "keys": ["alt+["], "command": "prev_view_in_group" },
-    { "keys": ["alt+]"], "command": "next_view_in_group" },
-    // ----------------------------------------------------------------------------------------------------------------
     { "keys": ["alt+-"], "command": "focus_neighboring_group", "args": { "forward": false } },
     { "keys": ["alt+="], "command": "focus_neighboring_group" },
 
@@ -350,7 +352,7 @@
     { "keys": ["alt+shift+c"], "command": "toggle_preserve_case", "context": [ { "key": "setting.is_widget", "operator": "equal", "operand": true } ] },
     { "keys": ["alt+shift+k"], "command": "prev_modification" },
     { "keys": ["alt+shift+n"], "command": "prev_result" },
-    { "keys": ["alt+shift+p"], "command": "prev_misspelling" },
+    { "keys": ["alt+shift+x"], "command": "prev_misspelling" },
     { "keys": ["alt+shift+r"], "command": "cycle", "args": { "forward": false } },
     { "keys": ["alt+shift+1"], "command": "set_layout", "args": { "cols": [0.0, 1.0], "rows": [0.0, 1.0], "cells": [ [0, 0, 1, 1] ] } },
     { "keys": ["alt+shift+2"], "command": "set_layout", "args": { "cols": [0.0, 1.0], "rows": [0.0, 0.5, 1.0], "cells": [ [0, 0, 1, 1], [0, 1, 1, 2] ] } },
@@ -378,7 +380,7 @@
     // ----------------------------------------------------------------------------------------------------------------
     { "keys": ["super+k", "super+g"], "command": "edit_settings", "args": { "base_file": "${packages}/Default/Default ($platform).sublime-keymap", "default": "[\n\t$0\n]\n" } },
     { "keys": ["super+k", "super+h"], "command": "switch_file", "args": { "extensions": ["cpp", "cxx", "cc", "c", "hpp", "hxx", "hh", "h", "ipp", "inl", "m", "mm"] } },
-    { "keys": ["super+k", "super+i"], "command": "goto_definition" },
+    { "keys": ["super+k", "super+i"], "command": "context_menu" },
     { "keys": ["super+k", "super+j"], "command": "join_lines" },
     // ----- [P] My Show At Center ------------------------------------------------------------------------------------
     { "keys": ["super+k", "super+k"], "command": "show_at_top_center" },
@@ -389,7 +391,6 @@
     // ----- [P] Expand Cut -------------------------------------------------------------------------------------------
     { "keys": ["super+k", "super+o"], "command": "copy_to_mark" },
     // ----------------------------------------------------------------------------------------------------------------
-    { "keys": ["super+k", "super+p"], "command": "toggle_setting", "args": { "setting": "spell_check" } },
     { "keys": ["super+k", "super+q"], "command": "find_under_expand_skip" },
     { "keys": ["super+k", "super+r"], "command": "revert_modification" },
     { "keys": ["super+k", "super+s"], "command": "save_copy_as" },
@@ -399,7 +400,7 @@
     // ----- [P] Expand Cut -------------------------------------------------------------------------------------------
     { "keys": ["super+k", "super+w"], "command": "cut_to_mark" },
     // ----------------------------------------------------------------------------------------------------------------
-    { "keys": ["super+k", "super+x"], "command": "context_menu" },
+    { "keys": ["super+k", "super+x"], "command": "toggle_setting", "args": { "setting": "spell_check" } },
     { "keys": ["super+k", "super+y"], "command": "yank" },
     { "keys": ["super+k", "super+;"], "command": "chain", "args": { "commands": [ ["expand_copy_word"], ["show_panel", { "panel": "incremental_find", "reverse": false, "toggle": true } ], ["paste"] ] } },
     { "keys": ["super+k", "super+."], "command": "set_mark" },
