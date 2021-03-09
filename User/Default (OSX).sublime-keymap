@@ -173,7 +173,6 @@
     { "keys": ["super+f"], "command": "show_panel", "args": { "panel": "incremental_find", "reverse": false, "toggle": true } },
     { "keys": ["super+g"], "command": "find_next" },
     { "keys": ["super+h"], "command": "show_panel", "args": { "panel": "replace", "reverse": false, "toggle": true } },
-    // { "keys": ["super+i"], "command": "show_overlay", "args": { "overlay": "goto", "text": "@" } },
     { "keys": ["super+i"], "command": "goto_definition" },
     // ----- [P] MarkAndMove ------------------------------------------------------------------------------------------
     { "keys": ["super+j"], "command": "mark_and_move_do_it_all" },
@@ -188,7 +187,7 @@
     // ----------------------------------------------------------------------------------------------------------------
     { "keys": ["super+p"], "command": "show_overlay", "args": { "overlay": "goto", "show_files": true } },
     { "keys": ["super+q"], "command": "exit" },
-    { "keys": ["super+r"], "command": "cycle" },
+    { "keys": ["super+r"], "command": "show_overlay", "args": { "overlay": "goto", "text": "@" } },
     { "keys": ["super+s"], "command": "save" },
     { "keys": ["super+t"], "command": "transpose" },
     { "keys": ["super+u"], "command": "soft_undo" },
@@ -409,6 +408,7 @@
     { "keys": ["super+k", "super+2"], "command": "fold_by_level", "args": { "level": 2 } },
     { "keys": ["super+k", "super+3"], "command": "fold_by_level", "args": { "level": 3 } },
     { "keys": ["super+k", "super+4"], "command": "fold_by_level", "args": { "level": 4 } },
+    { "keys": ["super+k", "super+0"], "command": "toggle_fold_comments" },
     // ----- Cancel cmd + k prefix ------------------------------------------------------------------------------------
     { "keys": ["super+k", "escape"], "command": "noop" },
     // ----- [P] My Origami -------------------------------------------------------------------------------------------
@@ -421,6 +421,7 @@
     // ===== CMD + K, CMD + SHIFT + Family ============================================================================
     { "keys": ["super+k", "super+shift+a"], "command": "permute_lines", "args": { "operation": "reverse" } },
     { "keys": ["super+k", "super+shift+c"], "command": "select_theme" },
+    { "keys": ["super+k", "super+shift+f"], "command": "clang_format" },
     { "keys": ["super+k", "super+shift+g"], "command": "open_file", "args": { "file": "${packages}/User/Default ($platform).sublime-keymap" } },
     { "keys": ["super+k", "super+shift+p"], "command": "open_file", "args": {"file": "${packages}/User/Package Control.sublime-settings"} },
     { "keys": ["super+k", "super+shift+u"], "command": "permute_lines", "args": { "operation": "unique" } },
