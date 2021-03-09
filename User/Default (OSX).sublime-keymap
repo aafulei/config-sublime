@@ -422,7 +422,6 @@
     { "keys": ["super+k", "super+shift+a"], "command": "permute_lines", "args": { "operation": "reverse" } },
     { "keys": ["super+k", "super+shift+c"], "command": "select_theme" },
     { "keys": ["super+k", "super+shift+g"], "command": "open_file", "args": { "file": "${packages}/User/Default ($platform).sublime-keymap" } },
-    { "keys": ["super+k", "super+shift+i"], "command": "goto_reference" },
     { "keys": ["super+k", "super+shift+p"], "command": "open_file", "args": {"file": "${packages}/User/Package Control.sublime-settings"} },
     { "keys": ["super+k", "super+shift+u"], "command": "permute_lines", "args": { "operation": "unique" } },
     { "keys": ["super+k", "super+shift+."], "command": "clear_bookmarks", "args": { "name": "mark" } },
