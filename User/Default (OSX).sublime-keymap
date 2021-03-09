@@ -136,13 +136,13 @@
     // ----- incremental find panel -----------------------------------------------------------------------------------
     { "keys": ["enter"], "command": "find_next", "context": [ {"key": "panel", "operand": "incremental_find"}, {"key": "panel_has_focus"} ] },
     { "keys": ["shift+enter"], "command": "find_prev", "context": [ {"key": "panel", "operand": "incremental_find"}, {"key": "panel_has_focus"} ] },
-    { "keys": ["super+enter"], "command": "hide_panel", "args": { "cancel": false }, "context": [ {"key": "panel", "operand": "incremental_find"}, {"key": "panel_has_focus"} ] },
     { "keys": ["alt+enter"], "command": "find_all", "args": { "close_panel": true }, "context": [ { "key": "panel", "operand": "incremental_find" }, { "key": "panel_has_focus" } ] },
     // ----- replace panel --------------------------------------------------------------------------------------------
     { "keys": ["enter"], "command": "find_next", "context": [ { "key": "panel", "operand": "replace" }, { "key": "panel_has_focus" } ] },
     { "keys": ["shift+enter"], "command": "find_prev", "context": [ { "key": "panel", "operand": "replace" }, { "key": "panel_has_focus" } ] },
     { "keys": ["super+enter"], "command": "replace_next", "context": [ { "key": "panel", "operand": "replace" }, { "key": "panel_has_focus" } ] },
-    { "keys": ["alt+enter"], "command": "replace_all", "args": { "close_panel": true }, "context": [ { "key": "panel", "operand": "replace" }, { "key": "panel_has_focus" } ] },
+    { "keys": ["alt+enter"], "command": "find_all", "args": { "close_panel": false }, "context": [ { "key": "panel", "operand": "replace" }, { "key": "panel_has_focus" } ] },
+    { "keys": ["super+alt+enter"], "command": "replace_all", "args": { "close_panel": true }, "context": [ { "key": "panel", "operand": "replace" }, { "key": "panel_has_focus" } ] },
     // ----- find in files panel --------------------------------------------------------------------------------------
     { "keys": ["enter"], "command": "find_all", "context": [ { "key": "panel", "operand": "find_in_files" }, { "key": "panel_has_focus" } ] },
     { "keys": ["super+alt+enter"], "command": "replace_all", "context": [ { "key": "panel", "operand": "find_in_files" }, { "key": "panel_has_focus" } ] },
@@ -152,10 +152,10 @@
     // ----- [P] Deselect ---------------------------------------------------------------------------------------------
     { "keys": ["escape"], "command": "deselect", "context": [ { "key": "selection_empty", "operator": "equal", "operand": false, "match_all": true }, { "key": "num_selections", "operator": "equal", "operand": 1 } ] },
     // ----------------------------------------------------------------------------------------------------------------
-    { "keys": ["escape"], "command": "hide_panel", "context": [ { "key": "panel_visible", "operator": "equal", "operand": true }, { "key": "panel", "operator": "equal", "operand": "find" }, ] },
-    { "keys": ["escape"], "command": "hide_panel", "args": { "cancel": true }, "context": [ { "key": "panel_visible", "operator": "equal", "operand": true }, { "key": "panel", "operator": "equal", "operand": "incremental_find" }, ] },
-    { "keys": ["escape"], "command": "hide_panel", "context": [ { "key": "panel_visible", "operator": "equal", "operand": true }, { "key": "panel", "operator": "equal", "operand": "replace" }, ] },
-    { "keys": ["escape"], "command": "hide_panel", "context": [ { "key": "panel_visible", "operator": "equal", "operand": true }, { "key": "panel", "operator": "equal", "operand": "find_in_files" }, ] },
+    { "keys": ["escape"], "command": "hide_panel", "args": { "cancel": false }, "context": [ { "key": "panel", "operator": "equal", "operand": "incremental_find" }, { "key": "panel_visible", "operator": "equal", "operand": true } ] },
+    { "keys": ["escape"], "command": "hide_panel", "context": [ { "key": "panel", "operator": "equal", "operand": "replace" }, { "key": "panel_visible", "operator": "equal", "operand": true } ] },
+    { "keys": ["escape"], "command": "hide_panel", "context": [ { "key": "panel", "operator": "equal", "operand": "find_in_files" }, { "key": "panel_visible", "operator": "equal", "operand": true } ] },
+    { "keys": ["super+escape"], "command": "hide_panel", "args": { "cancel": true }, "context": [ { "key": "panel", "operator": "equal", "operand": "incremental_find" }, { "key": "panel_visible", "operator": "equal", "operand": true } ] },
 
     // ===== SPACE ====================================================================================================
     { "keys": ["alt+space"], "command": "auto_complete" },

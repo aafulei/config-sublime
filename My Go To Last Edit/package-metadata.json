@@ -1,9 +1,0 @@
-{
-    "description": "Move Cursor to Last Edit Position",
-    "platforms": [
-        "*"
-    ],
-    "sublime_text": "*",
-    "url": "Managed",
-    "version": "1.0"
-}
