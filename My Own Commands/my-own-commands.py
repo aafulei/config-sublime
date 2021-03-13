@@ -1,9 +1,62 @@
-import sublime
-import sublime_plugin
-
 import re
 import string
 
+import sublime
+import sublime_plugin
+
+
+# ===== Expand Cut ====================================================================================================
+
+class ExpandCutWordCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        self.view.run_command("expand_selection", {"to": "word"})
+        self.view.run_command("cut")
+
+class ExpandCopyWordCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        old_sel = list(self.view.sel())
+        self.view.run_command("expand_selection", {"to": "word"})
+        self.view.run_command("copy")
+        self.view.sel().clear()
+        self.view.sel().add_all(old_sel)
+
+class ExpandPasteWordCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        self.view.run_command("expand_selection", {"to": "word"})
+        self.view.run_command("paste")
+
+# ===== Friendly Mark =================================================================================================
+
+class SelectWithMarkCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        self.view.run_command("select_to_mark")
+        self.view.run_command("change_selection_endpoint")
+        self.view.run_command("clear_bookmarks", {"name": "mark"})
+
+class CutToMarkCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        self.view.run_command("select_with_mark")
+        self.view.run_command("cut")
+
+class CopyToMarkCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        old_sel = list(self.view.sel())
+        self.view.run_command("select_with_mark")
+        self.view.run_command("copy")
+        self.view.sel().clear()
+        self.view.sel().add_all(old_sel)
+
+class PasteToMarkCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        self.view.run_command("select_with_mark")
+        self.view.run_command("paste")
+
+class GoToMarkCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        self.view.run_command("next_bookmark", {"name": "mark"})
+        self.view.run_command("clear_bookmarks", {"name": "mark"})
+
+# =====================================================================================================================
 
 class ClipboardHistory2():
     """
@@ -222,13 +275,7 @@ class CutToEolCommand(sublime_plugin.TextCommand):
 #         self.view.run_command("show_panel", { "panel": "find_in_files", "reverse": False, "toggle": True })
         # self.view.run_command("paste")
 
-class ExpandCopyWordCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        oldsel = list(self.view.sel())
-        self.view.run_command("expand_selection", {"to": "word"})
-        self.view.run_command("copy")
-        self.view.sel().clear()
-        self.view.sel().add_all(oldsel)
+
 
 class ExpandCopySubwordCommand(sublime_plugin.TextCommand):
     def run(self, edit):
@@ -238,81 +285,16 @@ class ExpandCopySubwordCommand(sublime_plugin.TextCommand):
         self.view.sel().clear()
         self.view.sel().add_all(oldsel)
 
-class ExpandCutWordCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        self.view.run_command("expand_selection", {"to": "word"})
-        self.view.run_command("cut")
-
 class ExpandCutSubwordCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         self.view.run_command("expand_selection_to_subword")
         self.view.run_command("cut")
 
-class ExpandPasteWordCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        self.view.run_command("expand_selection", {"to": "word"})
-        self.view.run_command("paste")
 
 class ExpandPasteSubwordCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         self.view.run_command("expand_selection_to_subword")
         self.view.run_command("paste")
-
-class ExpandDeleteWordCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        self.view.run_command("expand_selection", {"to": "word"})
-        self.view.run_command("left_delete")
-
-
-class SelectWithMarkCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        origPoint = self.view.sel()[-1].begin()
-        self.view.run_command("next_bookmark", {"name": "mark"})
-        markPoint = self.view.sel()[0].begin()
-        self.view.sel().clear()
-        self.view.sel().add_all([sublime.Region(markPoint, origPoint)])
-        self.view.run_command("clear_bookmarks", {"name": "mark"})
-
-class CopyToMarkCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        # origPoint = self.view.sel()[-1].begin()
-        # self.view.run_command("next_bookmark", {"name": "mark"})
-        # markPoint = self.view.sel()[0].begin()
-        # self.view.sel().clear()
-        # self.view.sel().add_all([sublime.Region(markPoint, origPoint)])
-        # self.view.run_command("copy")
-        # # g_clipboard_history.push_text(sublime.get_clipboard())
-        # self.view.run_command("clear_bookmarks", {"name": "mark"})
-        oldsel = list(self.view.sel())
-        self.view.run_command("select_with_mark")
-        self.view.run_command("copy")
-        self.view.sel().clear()
-        self.view.sel().add_all(oldsel)
-
-class PasteToCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        self.view.run_command("select_with_mark")
-        self.view.run_command("paste")
-
-
-class CutToMarkCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        origPoint = self.view.sel()[-1].begin()
-        self.view.run_command("next_bookmark", {"name": "mark"})
-        markPoint = self.view.sel()[0].begin()
-        self.view.sel().clear()
-        self.view.sel().add_all([sublime.Region(markPoint, origPoint)])
-        # there is no need to use yank, just ctrl+v to paste
-        self.view.run_command("cut")
-        # g_clipboard_history.push_text(sublime.get_clipboard())
-        self.view.run_command("clear_bookmarks", {"name": "mark"})
-
-class GoToMarkCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        self.view.run_command("next_bookmark", {"name": "mark"})
-        self.view.run_command("clear_bookmarks", {"name": "mark"})
-
-
 
 # https://forum.sublimetext.com/t/move-caret-to-beginning-or-end-of-selection-without-losing-selection/29329/2
 

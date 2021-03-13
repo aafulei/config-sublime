@@ -99,12 +99,20 @@
 			{ "key": "has_prev_field", "operator": "equal", "operand": true }
 		]
 	},
-	{ "keys": ["escape"], "command": "hide_panel", "args": {"cancel": true},
+	// ----- CHANGED --------------------------------------------------------------------------------------------------
+	// { "keys": ["escape"], "command": "hide_panel", "args": {"cancel": true },
+	// 	"context":
+	// 	[
+	// 		{ "key": "panel_visible", "operator": "equal", "operand": true }
+	// 	]
+	// },
+	{ "keys": ["escape"], "command": "hide_panel", "args": {"cancel": true },
 		"context":
 		[
-			{ "key": "panel_visible", "operator": "equal", "operand": true }
+			{ "key": "panel_has_focus", "operator": "equal", "operand": true }
 		]
 	},
+	// ----------------------------------------------------------------------------------------------------------------
 	{ "keys": ["escape"], "command": "hide_overlay", "context":
 		[
 			{ "key": "overlay_visible", "operator": "equal", "operand": true }
