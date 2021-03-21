@@ -317,7 +317,7 @@
     { "keys": ["alt+p"], "command": "find_prev", "context": [ { "key": "panel", "operand": "incremental_find" }, { "key": "panel_has_focus" } ] },
     { "keys": ["alt+p"], "command": "find_prev", "context": [ { "key": "panel", "operand": "replace" }, { "key": "panel_has_focus" } ] },
     { "keys": ["alt+q"], "command": "change_selection_endpoint" },
-    { "keys": ["alt+r"], "command": "cycle" },
+    { "keys": ["alt+r"], "command": "cycle_through_selections" },
     { "keys": ["alt+r"], "command": "toggle_regex", "context": [ { "key": "setting.is_widget", "operator": "equal", "operand": true } ] },
     { "keys": ["alt+s"], "command": "prev_misspelling" },
     { "keys": ["alt+s"], "command": "toggle_in_selection", "context": [ { "key": "setting.is_widget", "operator": "equal", "operand": true } ] },
@@ -352,7 +352,7 @@
     { "keys": ["alt+shift+k"], "command": "prev_modification" },
     { "keys": ["alt+shift+n"], "command": "prev_result" },
     { "keys": ["alt+shift+x"], "command": "prev_misspelling" },
-    { "keys": ["alt+shift+r"], "command": "cycle", "args": { "forward": false } },
+    { "keys": ["alt+shift+r"], "command": "cycle_through_selections", "args": { "forward": false } },
     { "keys": ["alt+shift+1"], "command": "set_layout", "args": { "cols": [0.0, 1.0], "rows": [0.0, 1.0], "cells": [ [0, 0, 1, 1] ] } },
     { "keys": ["alt+shift+2"], "command": "set_layout", "args": { "cols": [0.0, 1.0], "rows": [0.0, 0.5, 1.0], "cells": [ [0, 0, 1, 1], [0, 1, 1, 2] ] } },
     { "keys": ["alt+shift+3"], "command": "set_layout", "args": { "cols": [0.0, 1.0], "rows": [0.0, 0.33, 0.66, 1.0], "cells": [ [0, 0, 1, 1], [0, 1, 1, 2], [0, 2, 1, 3] ] } },
@@ -382,7 +382,7 @@
     { "keys": ["super+k", "super+i"], "command": "context_menu" },
     { "keys": ["super+k", "super+j"], "command": "join_lines" },
     // ----- [P] My Show At Center ------------------------------------------------------------------------------------
-    { "keys": ["super+k", "super+k"], "command": "show_at_top_center" },
+    { "keys": ["super+k", "super+k"], "command": "show_at_positions" },
     // ----------------------------------------------------------------------------------------------------------------
     { "keys": ["super+k", "super+l"], "command": "lower_case" },
     { "keys": ["super+k", "super+m"], "command": "toggle_minimap" },

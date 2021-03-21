@@ -1,9 +1,342 @@
+# standard
+import datetime
+import os
 import re
 import string
-
+import subprocess
+import time
+# sublime
 import sublime
 import sublime_plugin
 
+"""
+Change Selection Enpoint
+Cycle
+Deselect
+Expand Cut
+Friendly Mark
+Git Blame Status Bar
+Go to Last Edit
+NewFile
+Paste From History
+Show at Top Center
+Subword
+"""
+
+# sublime.log_commands(True)
+
+g_debug_on = True
+g_trace_on = False
+g_debug_log = print if g_debug_on else lambda *args, **kwargs: None
+g_trace_log = print if g_trace_on else lambda *args, **kwargs: None
+
+# ===== Global Functions ==============================================================================================
+
+def get_caret_row(view):
+    caret = view.sel()[0].begin()
+    caret_row = view.rowcol(caret)[0]
+    g_trace_log("get_caret_row(): {}".format(caret_row + 1))
+    return caret_row
+
+def get_visual_rows(view):
+    top_row = view.rowcol(view.visible_region().begin())[0]
+    bottom_row = view.rowcol(view.visible_region().end())[0]
+    g_trace_log("get_visual_rows(): top {}, bottom {}".format(top_row + 1, bottom_row + 1))
+    return top_row, bottom_row
+
+def get_view_file_name(view):
+    ret = view.file_name()
+    g_trace_log("get_view_file_name(): {}".format(ret))
+    return ret
+
+def cycle(sequence):
+    while True:
+        for elem in sequence:
+            yield elem
+
+# ===== Develop =======================================================================================================
+
+class DevelopCommand(sublime_plugin.TextCommand):
+    def __init__(self, view):
+        super().__init__(view)
+
+    def run(self, edit):
+        g_debug_log("develop(): run")
+
+# ===== ToggleLogCommands =======================================================================================================
+
+class ToggleLogCommandsCommand(sublime_plugin.WindowCommand):
+    def __init__(self, window):
+        super().__init__(window)
+        self._toggle = True
+
+    def run(self):
+        sublime.log_commands(self._toggle)
+        g_debug_log("sublime.log_commands({})".format(self._toggle))
+        self._toggle = not self._toggle
+
+# ===== Deselect ======================================================================================================
+
+# adapted from the deselect plugin by Aristotelis (glutanimate)
+# https://packagecontrol.io/packages/Deselect
+
+# no need to test num_selections when run_command
+class DeselectCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        if len(self.view.sel()) == 1:
+            end = self.view.sel()[0].b
+            end_region = sublime.Region(end, end)
+            self.view.sel().clear()
+            self.view.sel().add(end_region)
+        else:
+            self.view.run_command("single_selection")
+
+# ===== Change Selection Enpoint ======================================================================================
+
+# adapted from a forum post by OdatNurd
+# https://forum.sublimetext.com/t/move-caret-to-beginning-or-end-of-selection-without-losing-selection/29329
+
+class ChangeSelectionEndpointCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        new_sel = []
+        for region in self.view.sel():
+            new_sel.append(sublime.Region(region.b, region.a))
+        self.view.sel().clear()
+        self.view.sel().add_all(new_sel)
+
+# ===== Cycle =========================================================================================================
+
+g_last_text_command = ""
+
+class LastTextCommandUpdater(sublime_plugin.EventListener):
+    def on_post_text_command(self, view, name, args):
+        global g_last_text_command
+        g_last_text_command = name
+
+class CycleThroughSelectionsCommand(sublime_plugin.TextCommand):
+    def __init__(self, view):
+        super().__init__(view)
+        self.sel = []
+        self.num = 0
+
+    def run(self, edit, forward=True):
+        if g_last_text_command != self.name():
+            if len(self.view.sel()) == 0:
+                g_debug_log("no selections. return.")
+                return
+            else:
+                self.sel = list(self.view.sel())
+                self.num = 0 if forward else len(self.sel) - 1
+                g_debug_log("cycle through {} selection(s)".format(len(self.sel)))
+        self.view.sel().clear()
+        self.view.sel().add(self.sel[self.num])
+        self.view.show(self.sel[self.num])
+        g_debug_log("select {}/{}".format(self.num + 1, len(self.sel)))
+        if forward:
+            self.num = (self.num + 1) % len(self.sel)
+        else:
+            self.num = (self.num - 1) % len(self.sel)
+
+# ===== Show at Top Center ============================================================================================
+
+# adapted from the Recenter​Top​Bottom Sublime Text 2 plugin by Matt Burrows (mburrows)
+# https://github.com/mburrows/RecenterTopBottom
+
+g_show_at_positions = ["top", "center"]
+g_show_at_generator = cycle(g_show_at_positions)
+
+class CaretWatcher(sublime_plugin.EventListener):
+    def on_selection_modified_async(self, view):
+        global g_show_at_generator
+        g_show_at_generator = cycle(g_show_at_positions)
+        g_trace_log("CaretWatcher(): caret has moved, reset g_show_at_generator")
+
+class ShowAtPositionsCommand(sublime_plugin.TextCommand):
+    def run(self, edit, margin=5):
+        pos = next(g_show_at_generator)
+        if pos == "top":
+            self.show_at_top(margin)
+        elif pos == "bottom":
+            self.show_at_bottom(margin)
+        else:
+            self.view.run_command("show_at_center")
+            g_debug_log("show_at_center()")
+
+    def show_at_top(self, margin):
+        offset = self.caret_row() - self.top_row() - margin
+        self.view.run_command("scroll_lines", {"amount": -offset})
+        g_debug_log("show_at_top(margin={}): scroll_lines(amount={})".format(margin, -offset))
+
+    def show_at_bottom(self, margin):
+        offset = self.bottom_row() - self.caret_row() - margin
+        self.view.run_command("scroll_lines", {"amount": offset})
+        g_debug_log("show_at_bottom(margin={}): scroll_lines(amount={})".format(margin, offset))
+
+    def caret_row(self):
+        return get_caret_row(self.view)
+
+    def top_row(self):
+        return get_visual_rows(self.view)[0]
+
+    def bottom_row(self):
+        return get_visual_rows(self.view)[1]
+
+# ===== Git Blame Status Bar ==========================================================================================
+
+# adapted from a gist from Rodrigo Bermúdez Schettino (rodrigobdz)
+# https://gist.github.com/rodrigobdz/dbcdcaac6c5af7276c63ec920ba894b0
+
+def get_days_ago(day):
+    return (datetime.datetime.now() - day).days
+
+    if ret == 0:
+        return "today"
+    elif abs(ret) == 1:
+        return "{} day ago".format(ret)
+    else:
+        return "{} days ago".format(ret)
+
+class GitBlameStatusbarCommand(sublime_plugin.EventListener):
+    def on_selection_modified_async(self, view):
+        caret_row = get_caret_row(view)
+        path = get_view_file_name(view)
+        if not path:
+            return
+        blame = self.get_blame(caret_row + 1, path)
+        if not blame:
+            return
+        parsed = self.parse_blame(blame)
+        output = ""
+        author = parsed.get("author")
+        if author:
+            output += author
+        author_time = parsed.get("author-time")
+        if author_time:
+            author_datetime = datetime.datetime.fromtimestamp(int(author_time))
+            days_ago = get_days_ago(author_datetime)
+            if output:
+                output += ", "
+            if days_ago == 0:
+                output += "today"
+            elif abs(days_ago) == 1:
+                output += "{} day ago".format(days_ago)
+            else:
+                output += "{} days ago".format(days_ago)
+        if output:
+            view.set_status("git_blame", "→ " + output)
+
+    def get_blame(self, line, path):
+        try:
+            # some preparation work for Windows
+            startup_info = subprocess.STARTUPINFO()
+            startup_info.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        except:
+            startup_info = None
+        working_dir = os.path.dirname(os.path.realpath(path))
+        try:
+            ret = subprocess.check_output(["git", "blame", "--porcelain", "-L {0},{0}".format(line), path],
+                cwd=working_dir,
+                startupinfo=startup_info,
+                stderr=subprocess.STDOUT)
+            return ret.decode()
+        except subprocess.CalledProcessError as e:
+            error_code = e.returncode
+            error_info = e.output.decode()
+            g_trace_log("GitBlameStatusbarCommand(): [error code {}] {}".format(error_code, error_info))
+        except Exception as e:
+            g_trace_log("GitBlameStatusbarCommand(): [unexpected error] {}".format(e))
+
+    def parse_blame(self, blame):
+        ret = {}
+        for line in blame.splitlines()[1:]:
+            # ----------------------------
+            # git-blame --porcelain format
+            # ----------------------------
+            # 1. header line, e.g. commit SHA, original and final line numbers
+            # 2. more header info, e.g. author, author-time
+            # 3. [TAB] actual content line
+            if line.startswith("\t"):
+                return ret
+            words = line.split()
+            if len(words) > 1:
+                ret[words[0]] = " ".join(words[1:])
+        return ret
+
+# ===== Go to Last Edit ===============================================================================================
+
+# adapted from the GotoLastEditEnhanced plugin by Leonid Shagabutdinov (shagabutdinov)
+# see https://github.com/shagabutdinov/sublime-goto-last-edit-enhanced
+
+MAX_HIST_SIZE = 5000
+
+class ViewHistory():
+    def __init__(self):
+        self.index = 0
+        self.start = 0
+        self.max = 0
+
+    def remove_oldest(self):
+        self.start = self.start + 1
+        return (self.start - 1)
+
+    def increment(self):
+        self.max += 1
+        self.index = self.max
+
+    def size(self):
+        return self.max - self.start
+
+
+class Collection():
+    def __init__(self):
+        self.views = {}
+        self.index = 0
+
+    def get(self, view):
+        vid = view.id()
+        if vid not in self.views:
+            self.views[vid] = ViewHistory()
+        return self.views[vid]
+
+
+collection = Collection()
+
+class GotoLastEditCommand(sublime_plugin.TextCommand):
+    def run(self, edit, backward=False):
+        history = collection.get(self.view)
+        g_debug_log("goto_last_edit(): run on view {}".format(self.view.id()))
+        g_debug_log("history.start={}".format(history.start))
+        g_debug_log("history.index={}".format(history.index))
+        g_debug_log("history.max={}".format(history.max))
+        history_range = reversed(range(history.start, history.index + 1))
+        if backward:
+            history_range = range(history.index, history.max + 1)
+        for index in history_range:
+            regions = self.view.get_regions("goto_last_edit_" + str(index))
+            if self.are_regions_equal(regions, self.view.sel()):
+                continue
+            if len(regions) > 0:
+                self.view.sel().clear()
+                self.view.sel().add_all(regions)
+                self.view.show(regions[0])
+                history.index = index
+                break
+
+    def are_regions_equal(self, regions_1, regions_2):
+        endpoints_1 = [(r.a, r.b) for r in regions_1]
+        endpoints_2 = [(r.a, r.b) for r in regions_2]
+        return endpoints_1 == endpoints_2
+
+class ViewWatcher(sublime_plugin.EventListener):
+    def on_modified(self, view):
+        history = collection.get(view)
+        if history.size() >= MAX_HIST_SIZE:
+            oldest = history.remove_oldest()
+            view.erase_regions("goto_last_edit_" + str(oldest))
+        history.increment()
+        new_regions_index = "goto_last_edit_{}".format(history.index)
+        view.add_regions(new_regions_index, view.sel())
+        g_debug_log("add_regions {}".format(new_regions_index))
 
 # ===== Expand Cut ====================================================================================================
 
@@ -25,7 +358,7 @@ class ExpandPasteWordCommand(sublime_plugin.TextCommand):
         self.view.run_command("expand_selection", {"to": "word"})
         self.view.run_command("paste")
 
-# ===== Friendly Mark =================================================================================================
+# ===== Simple Mark ===================================================================================================
 
 class SelectWithMarkCommand(sublime_plugin.TextCommand):
     def run(self, edit):
@@ -56,7 +389,7 @@ class GoToMarkCommand(sublime_plugin.TextCommand):
         self.view.run_command("next_bookmark", {"name": "mark"})
         self.view.run_command("clear_bookmarks", {"name": "mark"})
 
-# =====================================================================================================================
+# ===== Paste From History ============================================================================================
 
 class ClipboardHistory2():
     """
@@ -144,7 +477,7 @@ class PasteFromHistoryCommand(sublime_plugin.TextCommand):
         sublime.set_clipboard(text)
         self.view.run_command("paste")
 
-
+# ===== Subword =======================================================================================================
 
 def classify(c):
     if c in "_\n":
@@ -275,8 +608,6 @@ class CutToEolCommand(sublime_plugin.TextCommand):
 #         self.view.run_command("show_panel", { "panel": "find_in_files", "reverse": False, "toggle": True })
         # self.view.run_command("paste")
 
-
-
 class ExpandCopySubwordCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         oldsel = list(self.view.sel())
@@ -296,298 +627,7 @@ class ExpandPasteSubwordCommand(sublime_plugin.TextCommand):
         self.view.run_command("expand_selection_to_subword")
         self.view.run_command("paste")
 
-# https://forum.sublimetext.com/t/move-caret-to-beginning-or-end-of-selection-without-losing-selection/29329/2
-
-# OdatNurd
-
-
-
-
-class ChangeSelectionEndpointCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        new_sel = []
-        for sel in self.view.sel():
-            # reverse = (sel.a < sel.b) if begin else (sel.b < sel.a)
-            reverse = True
-            new_sel.append(sublime.Region(sel.b, sel.a) if reverse else sel)
-        self.view.sel().clear()
-        self.view.sel().add_all(new_sel)
-
-
-class GlobalCycleState:
-    def __init__(self):
-        self.init = False
-        self.sel = []
-        self.num = 0
-
-gcs = GlobalCycleState()
-
-class CycleCommand(sublime_plugin.TextCommand):
-    def run(self, edit, forward=True):
-        global gcs
-        if not gcs.init and len(self.view.sel()) <= 1:
-            # print("no need to cycle")
-            return
-        if not gcs.init:
-            gcs.sel = list(self.view.sel())
-            gcs.init = True
-            gcs.num = 0 if forward else len(gcs.sel) - 1
-            print("{} selections".format(len(gcs.sel)))
-        caret = gcs.sel[gcs.num].begin()
-        row = self.view.rowcol(caret)[0]
-        print("row at {}".format(row))
-        upper, _ = self.view.rowcol(self.view.visible_region().begin())
-        bottom,  _ = self.view.rowcol(self.view.visible_region().end())
-        print("upper at {}, bottom at {}".format(upper, bottom))
-        if row < upper + 5:
-            print("row < upper")
-            self.view.run_command("scroll_lines", {"amount": upper - row + 5})
-        if row > bottom - 5:
-            print("row > bottom")
-            self.view.run_command("scroll_lines", {"amount": upper - row + 5})
-        self.view.sel().clear()
-        self.view.sel().add(gcs.sel[gcs.num])
-        if forward:
-            gcs.num += 1
-            if gcs.num == len(gcs.sel):
-                gcs.num = 0
-        else:
-            gcs.num -= 1
-            if gcs.num == -1:
-                gcs.num = len(gcs.sel) - 1
-
-class LastCommandUpdater(sublime_plugin.EventListener):
-    def on_post_text_command(self, view, name, args):
-        global gcs
-        # print("on_post_text_command:", name)
-        if name != "cycle":
-            # print("last command is not cycle. clear cache.")
-            gcs.init = False
-            gcs.sel = []
-        else:
-            # print("last command is cycle. continue to cycle.")
-            pass
-
-# modified from https://github.com/mburrows/RecenterTopBottom
-# Move current line to top or center of screen
-
-# import sublime
-# import sublime_plugin
-
-from itertools import cycle
-
-
-POSNS = cycle(["top", "middle"])
-
-class CaretWatcher(sublime_plugin.EventListener):
-    def on_selection_modified(self, view):
-        # caret has moved, reset positions to their default value
-        global POSNS
-        POSNS = cycle(["top", "middle"])
-
-class ShowAtTopCenterCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        posn = next(POSNS)
-        if posn == "top":
-            self.show_at_top()
-        elif posn == "bottom":
-            self.show_at_bottom()
-        else:
-            self.view.run_command("show_at_center")
-
-    def row(self):
-        caret = self.view.sel()[0].begin()
-        return self.view.rowcol(caret)[0]
-
-    def show_at_top(self):
-        top, _ = self.screen_extents()
-        margin = 5
-        offset = self.row() - top - margin
-        self.view.run_command("scroll_lines", {"amount": -offset})
-
-    def show_at_bottom(self):
-        _, bottom = self.screen_extents()
-        offset = bottom - self.row() - 1
-        self.view.run_command("scroll_lines", {"amount": offset})
-
-    def screen_extents(self):
-        screenful = self.view.visible_region()
-        top_row, _ = self.view.rowcol(screenful.begin())
-        bottom_row, _ = self.view.rowcol(screenful.end())
-        return (top_row, bottom_row)
-
-
-
-
-# Go to last edit position
-
-# modified from https://github.com/shagabutdinov/sublime-goto-last-edit-enhanced
-
-import sublime
-import sublime_plugin
-
-MAX_HIST_SIZE = 5000
-
-class History():
-    def __init__(self):
-        self.index = 0
-        self.start = 0
-        self.max = 0
-
-    def remove_oldest(self):
-        self.start = self.start + 1
-        return (self.start - 1)
-
-    def increment(self):
-        self.max += 1
-        self.index = self.max
-
-    def size(self):
-        return self.max - self.start
-
-
-class Collection():
-    def __init__(self):
-        self.list = {}
-        self.index = 0
-
-    def get(self, view):
-        id = view.id()
-        if id not in self.list:
-            self.list[id] = History()
-
-        return self.list[id]
-
-collection = Collection()
-
-class GotoLastEdit(sublime_plugin.TextCommand):
-    def run(self, edit, backward = False):
-        history = collection.get(self.view)
-        history_range = reversed(range(history.start, history.index + 1))
-        if backward:
-            history_range = range(history.index, history.max + 1)
-
-        for index in history_range:
-            regions = self.view.get_regions('goto_last_edit_' + str(index))
-            if self.is_regions_equal(regions, self.view.sel()):
-                continue
-
-            if len(regions) > 0:
-                self.view.sel().clear()
-                self.view.sel().add_all(regions)
-                self.view.show(regions[0])
-                history.index = index
-                break
-
-    def is_regions_equal(self, regions_1, regions_2):
-        if len(regions_1) != len(regions_2):
-            return False
-
-        for index, region_1 in enumerate(regions_1):
-            region_2 = regions_2[index]
-            if region_2.a != region_1.a or region_2.b != region_1.b:
-                return False
-
-        return True
-
-class Listener(sublime_plugin.EventListener):
-    def on_modified(self, view):
-        history = collection.get(view)
-        if history.size() >= MAX_HIST_SIZE:
-            oldest = history.remove_oldest()
-            view.erase_regions('goto_last_edit_' + str(oldest))
-
-        history.increment()
-        view.add_regions('goto_last_edit_' + str(history.index), view.sel())
-
-
-
-
-
-
-
-
-
-
-
-# https://gist.github.com/rodrigobdz/dbcdcaac6c5af7276c63ec920ba894b0
-
-import sublime
-import sublime_plugin
-import os
-import subprocess
-from subprocess import check_output as shell
-from datetime import datetime
-
-try:
-    si = subprocess.STARTUPINFO()
-    si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-except:
-    si = None
-
-class GitBlameStatusbarCommand(sublime_plugin.EventListener):
-  def parse_blame(self, blame):
-    sha, file_path, user, date, time, tz_offset, *_ = blame.decode('utf-8').split()
-
-    # Was part of the inital commit so no updates
-    if file_path[0] == '(':
-        user, date, time, tz_offset = file_path, user, date, time
-        file_path = None
-
-    # Fix an issue where the username has a space
-    # Im going to need to do something better though if people
-    # start to have multiple spaces in their names.
-    if not date[0].isdigit():
-        user = "{0} {1}".format(user, date)
-        date, time = time, tz_offset
-
-    return(sha, user[1:], date, time)
-
-  def get_blame(self, line, path):
-    try:
-        return shell(["git", "blame", "--minimal", "-w",
-            "-L {0},{0}".format(line), path],
-            cwd=os.path.dirname(os.path.realpath(path)),
-            startupinfo=si,
-            stderr=subprocess.STDOUT)
-    except subprocess.CalledProcessError as e:
-        pass
-        # print("Git blame: git error {}:\n{}".format(e.returncode, e.output.decode("UTF-8")))
-    except Exception as e:
-        pass
-        # print("Git blame: Unexpected error:", e)
-
-  def days_between(self, d):
-    # now = datetime.strptime(datetime.now(), "%Y-%m-%d")
-    now = datetime.now()
-    d = datetime.strptime(d, "%Y-%m-%d")
-    return abs((now - d).days)
-
-  def on_selection_modified_async(self, view):
-    current_line = view.substr(view.line(view.sel()[0]))
-    (row,col) = view.rowcol(view.sel()[0].begin())
-    path = view.file_name()
-    blame = self.get_blame(int(row) + 1, path)
-    output = ''
-    if blame:
-        sha, user, date, time = self.parse_blame(blame)
-        # try:
-        #     time = '( ' + str(self.days_between(time)) + ' days ago )'
-        # except Exception as e:
-        #     time = ''
-        #     print("Git blame: days_between ", e)
-        time = ''
-        output = '→ ' + user + ' ' + time
-
-    view.set_status('git_blame', output)
-
-
-
-
-
-
-
-
+# ===== NewFile =======================================================================================================
 
 # Save a new file to the current folder by default
 
@@ -618,16 +658,3 @@ class NewFileListener(sublime_plugin.EventListener):
 
 
 
-# Sublime Deselect plugin
-#
-# based on a forum post by C0D312:
-# https://www.sublimetext.com/forum/viewtopic.php?f=2&t=4716#p21219
-
-import sublime, sublime_plugin
-
-class DeselectCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        end = self.view.sel()[0].b
-        pt = sublime.Region(end, end)
-        self.view.sel().clear()
-        self.view.sel().add(pt)

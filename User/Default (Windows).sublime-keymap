@@ -148,9 +148,10 @@
     { "keys": ["ctrl+alt+enter"], "command": "replace_all", "context": [ { "key": "panel", "operand": "find_in_files" }, { "key": "panel_has_focus" } ] },
 
     // ===== ESCAPE ===================================================================================================
-    { "keys": ["escape"], "command": "single_selection", "context": [ { "key": "num_selections", "operator": "not_equal", "operand": 1 } ] },
+    // { "keys": ["escape"], "command": "single_selection", "context": [ { "key": "num_selections", "operator": "not_equal", "operand": 1 } ] },
     // ----- [P] Deselect ---------------------------------------------------------------------------------------------
-    { "keys": ["escape"], "command": "deselect", "context": [ { "key": "selection_empty", "operator": "equal", "operand": false, "match_all": true }, { "key": "num_selections", "operator": "equal", "operand": 1 } ] },
+    // { "keys": ["escape"], "command": "deselect", "context": [ { "key": "selection_empty", "operator": "equal", "operand": false, "match_all": true }, { "key": "num_selections", "operator": "equal", "operand": 1 } ] },
+    { "keys": ["escape"], "command": "deselect" },
     // ----------------------------------------------------------------------------------------------------------------
     { "keys": ["escape"], "command": "hide_panel", "args": { "cancel": false }, "context": [ { "key": "panel", "operator": "equal", "operand": "incremental_find" }, { "key": "panel_visible", "operator": "equal", "operand": true } ] },
     { "keys": ["escape"], "command": "hide_panel", "context": [ { "key": "panel", "operator": "equal", "operand": "replace" }, { "key": "panel_visible", "operator": "equal", "operand": true } ] },
@@ -249,6 +250,7 @@
     { "keys": ["ctrl+shift+u"], "command": "soft_redo" },
     { "keys": ["ctrl+shift+v"], "command": "paste_and_indent" },
     { "keys": ["ctrl+shift+w"], "command": "close_window" },
+    { "keys": ["ctrl+shift+\\"], "command": "toggle_log_commands" },
     { "keys": ["ctrl+shift+;"], "command": "expand_copy_word" },
     { "keys": ["ctrl+shift+'"], "command": "copy_to_mark" },
     { "keys": ["ctrl+shift+,"], "command": "insert_snippet", "args": { "name": "Packages/XML/Snippets/long-tag.sublime-snippet" } },
@@ -317,7 +319,7 @@
     { "keys": ["alt+p"], "command": "find_prev", "context": [ { "key": "panel", "operand": "incremental_find" }, { "key": "panel_has_focus" } ] },
     { "keys": ["alt+p"], "command": "find_prev", "context": [ { "key": "panel", "operand": "replace" }, { "key": "panel_has_focus" } ] },
     { "keys": ["alt+q"], "command": "change_selection_endpoint" },
-    { "keys": ["alt+r"], "command": "cycle" },
+    { "keys": ["alt+r"], "command": "cycle_through_selections" },
     { "keys": ["alt+r"], "command": "toggle_regex", "context": [ { "key": "setting.is_widget", "operator": "equal", "operand": true } ] },
     { "keys": ["alt+s"], "command": "prev_misspelling" },
     { "keys": ["alt+s"], "command": "toggle_in_selection", "context": [ { "key": "setting.is_widget", "operator": "equal", "operand": true } ] },
@@ -352,7 +354,7 @@
     { "keys": ["alt+shift+k"], "command": "prev_modification" },
     { "keys": ["alt+shift+n"], "command": "prev_result" },
     { "keys": ["alt+shift+x"], "command": "prev_misspelling" },
-    { "keys": ["alt+shift+r"], "command": "cycle", "args": { "forward": false } },
+    { "keys": ["alt+shift+r"], "command": "cycle_through_selections", "args": { "forward": false } },
     { "keys": ["alt+shift+1"], "command": "set_layout", "args": { "cols": [0.0, 1.0], "rows": [0.0, 1.0], "cells": [ [0, 0, 1, 1] ] } },
     { "keys": ["alt+shift+2"], "command": "set_layout", "args": { "cols": [0.0, 1.0], "rows": [0.0, 0.5, 1.0], "cells": [ [0, 0, 1, 1], [0, 1, 1, 2] ] } },
     { "keys": ["alt+shift+3"], "command": "set_layout", "args": { "cols": [0.0, 1.0], "rows": [0.0, 0.33, 0.66, 1.0], "cells": [ [0, 0, 1, 1], [0, 1, 1, 2], [0, 2, 1, 3] ] } },
@@ -382,7 +384,7 @@
     { "keys": ["ctrl+k", "ctrl+i"], "command": "context_menu" },
     { "keys": ["ctrl+k", "ctrl+j"], "command": "join_lines" },
     // ----- [P] My Show At Center ------------------------------------------------------------------------------------
-    { "keys": ["ctrl+k", "ctrl+k"], "command": "show_at_top_center" },
+    { "keys": ["ctrl+k", "ctrl+k"], "command": "show_at_positions" },
     // ----------------------------------------------------------------------------------------------------------------
     { "keys": ["ctrl+k", "ctrl+l"], "command": "lower_case" },
     { "keys": ["ctrl+k", "ctrl+m"], "command": "toggle_minimap" },
