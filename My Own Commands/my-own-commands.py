@@ -216,9 +216,7 @@ class GitBlameStatusbarCommand(sublime_plugin.EventListener):
             days_ago = get_days_ago(author_datetime)
             if output:
                 output += ", "
-            if days_ago == 0:
-                output += "today"
-            elif abs(days_ago) == 1:
+            if abs(days_ago) <= 1:
                 output += "{} day ago".format(days_ago)
             else:
                 output += "{} days ago".format(days_ago)
@@ -640,8 +638,6 @@ class ExpandPasteSubwordCommand(sublime_plugin.TextCommand):
 #     view.settings().set("default_dir", view.window().folders()[0])
 # AttributeError: 'NoneType' object has no attribute 'folders'
 
-import sublime_plugin
-
 class NewFileListener(sublime_plugin.EventListener):
     def on_new_async(self, view):
         if not view.window():
@@ -657,4 +653,28 @@ class NewFileListener(sublime_plugin.EventListener):
         view.settings().set("default_dir", view.window().folders()[0])
 
 
+g_find_whole_word = True
+g_find_case_sensitive = True
 
+class FindStatusbarCommand(sublime_plugin.EventListener):
+    def on_post_text_command(self, view, name, args):
+        if g_find_case_sensitive:
+            find_case_sensitive_s = "C"
+        else:
+            find_case_sensitive_s = "~c"
+        if g_find_whole_word:
+            find_whole_word_s = "W"
+        else:
+            find_whole_word_s = "~w"
+        find_status = "[" + find_case_sensitive_s + "] [" + find_whole_word_s + "]"
+        view.set_status("find_status", find_status)
+
+class ToggleFindWholeWordCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        global g_find_whole_word
+        g_find_whole_word = not g_find_whole_word
+
+class ToggleFindCaseSensitiveCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        global g_find_case_sensitive
+        g_find_case_sensitive = not g_find_case_sensitive
