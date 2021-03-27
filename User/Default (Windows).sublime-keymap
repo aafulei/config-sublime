@@ -1,6 +1,6 @@
-// ===== Switch between macOS and Windows =============================================================================
-// 1. With "case sensitive" and "whole word" toggled on, quick find all and do (lowercased) [CTRL] <--> [SUPER].
-// 2. For macOS, uncomment lines following "macOS" and comment lines following "Windows". Vice versa.
+// ===== Switch between MACOS (camelCased) and WINDOWS (Title-cased) ==================================================
+// 1. With "case sensitive" and "whole word" toggled on, quick find all and do [SUPER (lowercased)] <--> [CTRL (lowercased)].
+// 2. For MACOS (camelCased), uncomment lines following "MACOS (camelCased)" and comment lines following "WINDOWS (Title-cased)". Vice versa.
 
 // ===== Order of Commands ============================================================================================
 //  If two commands are assigned to the same keys, the latter will prevail. Thus, if one command is context-free and
@@ -29,14 +29,9 @@
 // [P] ExpandRegion
 // [P] MarkAndMove
 // [P] Move By Paragraph
-// [P] My Git Blame Status Bar
-// [P] My Go to Last Edit
-// [P] My New File
-// [P] My Own Expand Cut
-// [P] My Own Friendly Mark
+// [P] My Own Commands
 // [P] My Own Macros
 // [P] My Own Snippets
-// [P] My Show At Top Center
 // [P] OpenHere
 // [P] Origami
 // [P] Outline
@@ -51,8 +46,8 @@
 
 // >>> sublime.log_commands(True)
 
-// q: why use ctrl for macos?
-// a: sublime text 3 accepts "ctrl" or "command" (but not "cmd") for the key. "ctrl" is easy to replace while reserving "command" for like "command": "move".
+// q: why use SUPER (lowercasd) for MACOS (camelCased)?
+// a: sublime text 3 accepts "SUPER" or "command" (but not "cmd") for the key. "SUPER" is easy to replace while reserving "command" for like "command": "move".
 
 // left, right, up, down, home, end, backspace, delete, pageup, pagedown, enter, escape, space
 // cmd, cmd + shift, alt, alt + shift, cmd + alt, cmd + alt + shift, cmd + k, ...
@@ -133,10 +128,12 @@
     // ----- [M] Default ----------------------------------------------------------------------------------------------
     { "keys": ["ctrl+enter"], "command": "run_macro_file", "args": { "file": "res://Packages/Default/Add Line.sublime-macro" } },
     { "keys": ["ctrl+shift+enter"], "command": "run_macro_file", "args": { "file": "res://Packages/Default/Add Line Before.sublime-macro" } },
+    // ----- find panel -----------------------------------------------------------------------------------
+    { "keys": ["enter"], "command": "find_next", "context": [ {"key": "panel", "operand": "find"}, {"key": "panel_has_focus"} ] },
+    { "keys": ["shift+enter"], "command": "find_prev", "context": [ {"key": "panel", "operand": "find"}, {"key": "panel_has_focus"} ] },
+    { "keys": ["alt+enter"], "command": "find_all", "args": { "close_panel": true }, "context": [ { "key": "panel", "operand": "find" }, { "key": "panel_has_focus" } ] },
     // ----- incremental find panel -----------------------------------------------------------------------------------
-    { "keys": ["enter"], "command": "find_next", "context": [ {"key": "panel", "operand": "incremental_find"}, {"key": "panel_has_focus"} ] },
-    { "keys": ["shift+enter"], "command": "find_prev", "context": [ {"key": "panel", "operand": "incremental_find"}, {"key": "panel_has_focus"} ] },
-    { "keys": ["alt+enter"], "command": "find_all", "args": { "close_panel": true }, "context": [ { "key": "panel", "operand": "incremental_find" }, { "key": "panel_has_focus" } ] },
+    { "keys": ["enter"], "command": "hide_panel", "args": { "cancel": false }, "context": [ { "key": "panel", "operator": "equal", "operand": "incremental_find" }, { "key": "panel_visible", "operator": "equal", "operand": true } ] },
     // ----- replace panel --------------------------------------------------------------------------------------------
     { "keys": ["enter"], "command": "find_next", "context": [ { "key": "panel", "operand": "replace" }, { "key": "panel_has_focus" } ] },
     { "keys": ["shift+enter"], "command": "find_prev", "context": [ { "key": "panel", "operand": "replace" }, { "key": "panel_has_focus" } ] },
@@ -148,15 +145,16 @@
     { "keys": ["ctrl+alt+enter"], "command": "replace_all", "context": [ { "key": "panel", "operand": "find_in_files" }, { "key": "panel_has_focus" } ] },
 
     // ===== ESCAPE ===================================================================================================
-    // { "keys": ["escape"], "command": "single_selection", "context": [ { "key": "num_selections", "operator": "not_equal", "operand": 1 } ] },
+    { "keys": ["escape"], "command": "single_selection", "context": [ { "key": "num_selections", "operator": "not_equal", "operand": 1 } ] },
     // ----- [P] Deselect ---------------------------------------------------------------------------------------------
-    // { "keys": ["escape"], "command": "deselect", "context": [ { "key": "selection_empty", "operator": "equal", "operand": false, "match_all": true }, { "key": "num_selections", "operator": "equal", "operand": 1 } ] },
-    { "keys": ["escape"], "command": "deselect" },
-    // ----------------------------------------------------------------------------------------------------------------
-    { "keys": ["escape"], "command": "hide_panel", "args": { "cancel": false }, "context": [ { "key": "panel", "operator": "equal", "operand": "incremental_find" }, { "key": "panel_visible", "operator": "equal", "operand": true } ] },
+    { "keys": ["escape"], "command": "deselect", "context": [ { "key": "selection_empty", "operator": "equal", "operand": false, "match_all": true }, { "key": "num_selections", "operator": "equal", "operand": 1 } ] },
+    // ----- find panel -----------------------------------------------------------------------------------
+    { "keys": ["escape"], "command": "hide_panel", "context": [ { "key": "panel", "operator": "equal", "operand": "find" }, { "key": "panel_visible", "operator": "equal", "operand": true } ] },
+    // ----- incremental find panel -----------------------------------------------------------------------------------
+    { "keys": ["escape"], "command": "hide_panel", "args": { "cancel": true }, "context": [ { "key": "panel", "operator": "equal", "operand": "incremental_find" }, { "key": "panel_visible", "operator": "equal", "operand": true } ] },
+    // ----- replace panel --------------------------------------------------------------------------------------------
     { "keys": ["escape"], "command": "hide_panel", "context": [ { "key": "panel", "operator": "equal", "operand": "replace" }, { "key": "panel_visible", "operator": "equal", "operand": true } ] },
     { "keys": ["escape"], "command": "hide_panel", "context": [ { "key": "panel", "operator": "equal", "operand": "find_in_files" }, { "key": "panel_visible", "operator": "equal", "operand": true } ] },
-    { "keys": ["ctrl+escape"], "command": "hide_panel", "args": { "cancel": true }, "context": [ { "key": "panel", "operator": "equal", "operand": "incremental_find" }, { "key": "panel_visible", "operator": "equal", "operand": true } ] },
 
     // ===== SPACE ====================================================================================================
     { "keys": ["alt+space"], "command": "auto_complete" },
@@ -171,7 +169,7 @@
     { "keys": ["ctrl+c"], "command": "copy" },
     { "keys": ["ctrl+d"], "command": "find_under_expand" },
     { "keys": ["ctrl+e"], "command": "find_under" },
-    { "keys": ["ctrl+f"], "command": "show_panel", "args": { "panel": "incremental_find", "reverse": false, "toggle": true } },
+    { "keys": ["ctrl+f"], "command": "show_panel", "args": { "panel": "find", "reverse": false, "toggle": true } },
     { "keys": ["ctrl+g"], "command": "find_next" },
     { "keys": ["ctrl+h"], "command": "show_panel", "args": { "panel": "replace", "reverse": false, "toggle": true } },
     { "keys": ["ctrl+i"], "command": "goto_definition" },
@@ -243,14 +241,13 @@
     { "keys": ["ctrl+shift+o"], "command": "prompt_open_folder" },
     // ----------------------------------------------------------------------------------------------------------------
     { "keys": ["ctrl+shift+p"], "command": "show_overlay", "args": { "overlay": "command_palette" } },
-    // ----- ctrl+shift+q is to log out in macOS ---------------------------------------------------------------------
+    // ----- ctrl+shift+q is to log out in MACOS ---------------------------------------------------------------------
     { "keys": ["ctrl+shift+r"], "command": "goto_symbol_in_project" },
     { "keys": ["ctrl+shift+s"], "command": "prompt_save_as" },
     { "keys": ["ctrl+shift+t"], "command": "reopen_last_file" },
     { "keys": ["ctrl+shift+u"], "command": "soft_redo" },
     { "keys": ["ctrl+shift+v"], "command": "paste_and_indent" },
     { "keys": ["ctrl+shift+w"], "command": "close_window" },
-    { "keys": ["ctrl+shift+\\"], "command": "toggle_log_commands" },
     { "keys": ["ctrl+shift+;"], "command": "expand_copy_word" },
     { "keys": ["ctrl+shift+'"], "command": "copy_to_mark" },
     { "keys": ["ctrl+shift+,"], "command": "insert_snippet", "args": { "name": "Packages/XML/Snippets/long-tag.sublime-snippet" } },
@@ -297,18 +294,20 @@
     // ===== ALT + Family =============================================================================================
     { "keys": ["alt+a"], "command": "toggle_wrap", "context": [ { "key": "setting.is_widget", "operator": "equal", "operand": true } ] },
     { "keys": ["alt+b"], "command": "toggle_use_buffer", "context": [ { "key": "setting.is_widget", "operator": "equal", "operand": true } ] },
+    { "keys": ["alt+c"], "command": "toggle_find_case_sensitive" },
     { "keys": ["alt+c"], "command": "toggle_case_sensitive" , "context": [ { "key": "setting.is_widget", "operator": "equal", "operand": true } ] },
     { "keys": ["alt+d"], "command": "expand_selection_to_subword" },
     { "keys": ["alt+d"], "command": "toggle_highlight", "context": [ { "key": "setting.is_widget", "operator": "equal", "operand": true } ] },
-    // ----- alt + e is tied to giving accents (e.g. é) in macOS ------------------------------------------------------
-    { "keys": ["alt+f"], "command": "show_panel", "args": { "panel": "output.find_results" } },
-    { "keys": ["alt+f"], "command": "hide_panel", "args": { "panel": "output.find_results" }, "context": [ { "key": "panel_visible" } ] },
+    // ----- alt + e is tied to giving accents (e.g. é) in MACOS ------------------------------------------------------
+    { "keys": ["alt+f"], "command": "show_panel", "args": { "panel": "incremental_find", "reverse": false, "toggle": true } },
+    { "keys": ["alt+g"], "command": "show_overlay", "args": { "overlay": "goto", "text": ":" } },
     { "keys": ["alt+h"], "command": "select_lines", "args": { "forward": true } },
     { "keys": ["alt+i"], "command": "prev_modification" },
     { "keys": ["alt+j"], "command": "jump_back" },
     { "keys": ["alt+k"], "command": "next_modification" },
     { "keys": ["alt+l"], "command": "jump_forward" },
-    { "keys": ["alt+m"], "command": "show_overlay", "args": { "overlay": "goto", "text": ":" } },
+    { "keys": ["alt+m"], "command": "show_panel", "args": { "panel": "output.find_results" } },
+    { "keys": ["alt+m"], "command": "hide_panel", "args": { "panel": "output.find_results" }, "context": [ { "key": "panel_visible" } ] },
     { "keys": ["alt+n"], "command": "next_result" },
     { "keys": ["alt+n"], "command": "find_next", "context": [ { "key": "panel", "operand": "find" }, { "key": "panel_has_focus" } ] },
     { "keys": ["alt+n"], "command": "find_next", "context": [ { "key": "panel", "operand": "incremental_find" }, { "key": "panel_has_focus" } ] },
@@ -319,12 +318,12 @@
     { "keys": ["alt+p"], "command": "find_prev", "context": [ { "key": "panel", "operand": "incremental_find" }, { "key": "panel_has_focus" } ] },
     { "keys": ["alt+p"], "command": "find_prev", "context": [ { "key": "panel", "operand": "replace" }, { "key": "panel_has_focus" } ] },
     { "keys": ["alt+q"], "command": "change_selection_endpoint" },
-    { "keys": ["alt+r"], "command": "cycle_through_selections" },
+    { "keys": ["alt+r"], "command": "cycle_through_selections", "args": { "forward": false } },
     { "keys": ["alt+r"], "command": "toggle_regex", "context": [ { "key": "setting.is_widget", "operator": "equal", "operand": true } ] },
     { "keys": ["alt+s"], "command": "prev_misspelling" },
     { "keys": ["alt+s"], "command": "toggle_in_selection", "context": [ { "key": "setting.is_widget", "operator": "equal", "operand": true } ] },
+    { "keys": ["alt+w"], "command": "toggle_find_whole_word"},
     { "keys": ["alt+w"], "command": "toggle_whole_word", "context": [ { "key": "setting.is_widget", "operator": "equal", "operand": true } ] },
-    { "keys": ["alt+w"], "command": "toggle_setting", "args": { "setting": "word_wrap" },  "context": [ { "key": "setting.is_widget", "operator": "equal", "operand": false } ] },
     { "keys": ["alt+x"], "command": "next_misspelling" },
     { "keys": ["alt+x"], "command": "toggle_show_context", "context": [ { "key": "setting.is_widget", "operator": "equal", "operand": true } ] },
     { "keys": ["alt+y"], "command": "select_lines", "args": { "forward": false } },
@@ -353,8 +352,9 @@
     { "keys": ["alt+shift+c"], "command": "toggle_preserve_case", "context": [ { "key": "setting.is_widget", "operator": "equal", "operand": true } ] },
     { "keys": ["alt+shift+k"], "command": "prev_modification" },
     { "keys": ["alt+shift+n"], "command": "prev_result" },
+    { "keys": ["alt+shift+w"], "command": "toggle_setting", "args": { "setting": "word_wrap" },  "context": [ { "key": "setting.is_widget", "operator": "equal", "operand": false } ] },
     { "keys": ["alt+shift+x"], "command": "prev_misspelling" },
-    { "keys": ["alt+shift+r"], "command": "cycle_through_selections", "args": { "forward": false } },
+    { "keys": ["alt+shift+r"], "command": "cycle_through_selections", "args": { "forward": true } },
     { "keys": ["alt+shift+1"], "command": "set_layout", "args": { "cols": [0.0, 1.0], "rows": [0.0, 1.0], "cells": [ [0, 0, 1, 1] ] } },
     { "keys": ["alt+shift+2"], "command": "set_layout", "args": { "cols": [0.0, 1.0], "rows": [0.0, 0.5, 1.0], "cells": [ [0, 0, 1, 1], [0, 1, 1, 2] ] } },
     { "keys": ["alt+shift+3"], "command": "set_layout", "args": { "cols": [0.0, 1.0], "rows": [0.0, 0.33, 0.66, 1.0], "cells": [ [0, 0, 1, 1], [0, 1, 1, 2], [0, 2, 1, 3] ] } },
@@ -403,7 +403,6 @@
     // ----------------------------------------------------------------------------------------------------------------
     { "keys": ["ctrl+k", "ctrl+x"], "command": "toggle_setting", "args": { "setting": "spell_check" } },
     { "keys": ["ctrl+k", "ctrl+y"], "command": "yank" },
-    { "keys": ["ctrl+k", "ctrl+;"], "command": "chain", "args": { "commands": [ ["expand_copy_word"], ["show_panel", { "panel": "incremental_find", "reverse": false, "toggle": true } ], ["paste"] ] } },
     { "keys": ["ctrl+k", "ctrl+."], "command": "set_mark" },
     { "keys": ["ctrl+k", "ctrl+`"], "command": "unfold_all" },
     { "keys": ["ctrl+k", "ctrl+1"], "command": "fold_by_level", "args": { "level": 1 } },

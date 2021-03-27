@@ -1,6 +1,6 @@
-// ===== Switch between macOS and Windows =============================================================================
-// 1. With "case sensitive" and "whole word" toggled on, quick find all and do (lowercased) [CTRL] <--> [SUPER].
-// 2. For macOS, uncomment lines following "macOS" and comment lines following "Windows". Vice versa.
+// ===== Switch between MACOS (camelCased) and WINDOWS (Title-cased) ==================================================
+// 1. With "case sensitive" and "whole word" toggled on, quick find all and do [SUPER (lowercased)] <--> [CTRL (lowercased)].
+// 2. For MACOS (camelCased), uncomment lines following "MACOS (camelCased)" and comment lines following "WINDOWS (Title-cased)". Vice versa.
 
 // ===== Order of Commands ============================================================================================
 //  If two commands are assigned to the same keys, the latter will prevail. Thus, if one command is context-free and
@@ -46,8 +46,8 @@
 
 // >>> sublime.log_commands(True)
 
-// q: why use super for macos?
-// a: sublime text 3 accepts "super" or "command" (but not "cmd") for the key. "super" is easy to replace while reserving "command" for like "command": "move".
+// q: why use SUPER (lowercasd) for MACOS (camelCased)?
+// a: sublime text 3 accepts "SUPER" or "command" (but not "cmd") for the key. "SUPER" is easy to replace while reserving "command" for like "command": "move".
 
 // left, right, up, down, home, end, backspace, delete, pageup, pagedown, enter, escape, space
 // cmd, cmd + shift, alt, alt + shift, cmd + alt, cmd + alt + shift, cmd + k, ...
