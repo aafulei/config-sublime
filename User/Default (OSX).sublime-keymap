@@ -29,14 +29,9 @@
 // [P] ExpandRegion
 // [P] MarkAndMove
 // [P] Move By Paragraph
-// [P] My Git Blame Status Bar
-// [P] My Go to Last Edit
-// [P] My New File
-// [P] My Own Expand Cut
-// [P] My Own Friendly Mark
+// [P] My Own Commands
 // [P] My Own Macros
 // [P] My Own Snippets
-// [P] My Show At Top Center
 // [P] OpenHere
 // [P] Origami
 // [P] Outline
@@ -129,14 +124,14 @@
     // { "keys": ["super+shift+delete"], "command": "run_macro_file", "args": { "file": "res://Packages/Default/Delete to EOL.sublime-macro" } },
     // ----------------------------------------------------------------------------------------------------------------
 
-    // ===== ENTER ====================================================================================================
+    // ===== ENTER and ESCAPE =========================================================================================
     // ----- [M] Default ----------------------------------------------------------------------------------------------
     { "keys": ["super+enter"], "command": "run_macro_file", "args": { "file": "res://Packages/Default/Add Line.sublime-macro" } },
     { "keys": ["super+shift+enter"], "command": "run_macro_file", "args": { "file": "res://Packages/Default/Add Line Before.sublime-macro" } },
     // ----- incremental find panel -----------------------------------------------------------------------------------
-    { "keys": ["enter"], "command": "find_next", "context": [ {"key": "panel", "operand": "incremental_find"}, {"key": "panel_has_focus"} ] },
-    { "keys": ["shift+enter"], "command": "find_prev", "context": [ {"key": "panel", "operand": "incremental_find"}, {"key": "panel_has_focus"} ] },
-    { "keys": ["alt+enter"], "command": "find_all", "args": { "close_panel": true }, "context": [ { "key": "panel", "operand": "incremental_find" }, { "key": "panel_has_focus" } ] },
+    { "keys": ["escape"], "command": "hide_panel", "args": { "cancel": true }, "context": [ { "key": "panel", "operator": "equal", "operand": "incremental_find" }, { "key": "panel_visible", "operator": "equal", "operand": true } ] },
+    { "keys": ["enter"], "command": "chain", "args":  { "commands": [ ["hide_panel", { "cancel": false } ], ["deselect"] ] }, "context": [ { "key": "panel", "operator": "equal", "operand": "incremental_find" }, { "key": "panel_visible", "operator": "equal", "operand": true } ] },
+    { "keys": ["shift+enter"], "command": "hide_panel", "args": { "cancel": false }, "context": [ { "key": "panel", "operator": "equal", "operand": "incremental_find" }, { "key": "panel_visible", "operator": "equal", "operand": true } ] },
     // ----- replace panel --------------------------------------------------------------------------------------------
     { "keys": ["enter"], "command": "find_next", "context": [ { "key": "panel", "operand": "replace" }, { "key": "panel_has_focus" } ] },
     { "keys": ["shift+enter"], "command": "find_prev", "context": [ { "key": "panel", "operand": "replace" }, { "key": "panel_has_focus" } ] },
@@ -152,10 +147,8 @@
     // ----- [P] Deselect ---------------------------------------------------------------------------------------------
     { "keys": ["escape"], "command": "deselect", "context": [ { "key": "selection_empty", "operator": "equal", "operand": false, "match_all": true }, { "key": "num_selections", "operator": "equal", "operand": 1 } ] },
     // ----------------------------------------------------------------------------------------------------------------
-    { "keys": ["escape"], "command": "hide_panel", "args": { "cancel": false }, "context": [ { "key": "panel", "operator": "equal", "operand": "incremental_find" }, { "key": "panel_visible", "operator": "equal", "operand": true } ] },
     { "keys": ["escape"], "command": "hide_panel", "context": [ { "key": "panel", "operator": "equal", "operand": "replace" }, { "key": "panel_visible", "operator": "equal", "operand": true } ] },
     { "keys": ["escape"], "command": "hide_panel", "context": [ { "key": "panel", "operator": "equal", "operand": "find_in_files" }, { "key": "panel_visible", "operator": "equal", "operand": true } ] },
-    { "keys": ["super+escape"], "command": "hide_panel", "args": { "cancel": true }, "context": [ { "key": "panel", "operator": "equal", "operand": "incremental_find" }, { "key": "panel_visible", "operator": "equal", "operand": true } ] },
 
     // ===== SPACE ====================================================================================================
     { "keys": ["alt+space"], "command": "auto_complete" },
@@ -301,11 +294,13 @@
     // ----- alt + e is tied to giving accents (e.g. é) in macOS ------------------------------------------------------
     { "keys": ["alt+f"], "command": "show_panel", "args": { "panel": "output.find_results" } },
     { "keys": ["alt+f"], "command": "hide_panel", "args": { "panel": "output.find_results" }, "context": [ { "key": "panel_visible" } ] },
+    { "keys": ["alt+g"], "command": "show_overlay", "args": { "overlay": "goto", "text": ":" } },
     { "keys": ["alt+h"], "command": "select_lines", "args": { "forward": true } },
     { "keys": ["alt+i"], "command": "prev_modification" },
     { "keys": ["alt+j"], "command": "jump_back" },
     { "keys": ["alt+k"], "command": "next_modification" },
     { "keys": ["alt+l"], "command": "jump_forward" },
+    // change to alt+g?
     { "keys": ["alt+m"], "command": "show_overlay", "args": { "overlay": "goto", "text": ":" } },
     { "keys": ["alt+n"], "command": "next_result" },
     { "keys": ["alt+n"], "command": "find_next", "context": [ { "key": "panel", "operand": "find" }, { "key": "panel_has_focus" } ] },

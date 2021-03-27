@@ -1,5 +1,5 @@
 {
-    "ColumnLimit":                                      79,
+    "ColumnLimit":                                      119,
     "IndentWidth":                                      4,
     "AccessModifierOffset":                             -4,
     "MaxEmptyLinesToKeep":                              1,
@@ -13,7 +13,7 @@
     "AlignOperands":                                    "AlignAfterOperator",
     "AlignTrailingComments":                            true,
     "AllowShortBlocksOnASingleLine":                    "Empty",
-    "AllowShortFunctionsOnASingleLine":                 "InlineOnly",
+    "AllowShortFunctionsOnASingleLine":                 "Inline",
     "BinPackArguments":                                 false,
     "BinPackParameters":                                false,
     "BreakBeforeBinaryOperators":                       "All",
@@ -24,6 +24,7 @@
     "BreakStringLiterals":                              true,
     "CompactNamespaces":                                false,
     "ConstructorInitializerAllOnOneLineOrOnePerLine":   true,
+    "Cpp11BracedListStyle":                             false,
     "FixNamespaceComments":                             true,
     "IndentCaseBlocks":                                 false,
     "IndentCaseLabels":                                 true,

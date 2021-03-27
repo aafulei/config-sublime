@@ -1,6 +1,14 @@
 {
 	"binary": "/Users/aaron.fu/S/bin/clang-format",
 	"format_on_save": false,
-	"languages": ["C", "C++", "C++11", "JavaScript", "Objective-C", "Objective-C++"],
-	"style": "Custom",
+	"languages":
+	[
+		"C",
+		"C++",
+		"C++11",
+		"JavaScript",
+		"Objective-C",
+		"Objective-C++"
+	],
+	"style": "Custom"
 }

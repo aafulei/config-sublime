@@ -25,7 +25,7 @@ Subword
 
 # sublime.log_commands(True)
 
-g_debug_on = True
+g_debug_on = False
 g_trace_on = False
 g_debug_log = print if g_debug_on else lambda *args, **kwargs: None
 g_trace_log = print if g_trace_on else lambda *args, **kwargs: None
