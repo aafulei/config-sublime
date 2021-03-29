@@ -1,5 +1,5 @@
 {
-	"binary": "/Users/aaron.fu/S/bin/clang-format",
+	"binary": "clang-format.exe",
 	"format_on_save": false,
 	"languages":
 	[

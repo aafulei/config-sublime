@@ -1,11 +1,11 @@
 {
-    "ColumnLimit":                                      119,
+    "ColumnLimit":                                      79,
     "IndentWidth":                                      4,
     "AccessModifierOffset":                             -4,
     "MaxEmptyLinesToKeep":                              1,
 
     "AlignAfterOpenBracket":                            "Align",
-    "AlignConsecutiveAssignments":                      true,
+    "AlignConsecutiveAssignments":                      false,
     "AlignConsecutiveBitFields":                        true,
     "AlignConsecutiveDeclarations":                     true,
     "AlignConsecutiveMacros":                           true,
@@ -42,6 +42,7 @@
     "SpaceAfterCStyleCast":                             false,
     "SpaceAfterLogicalNot":                             false,
     "SpaceAfterTemplateKeyword":                        false,
+    // "SpaceAroundPointerQualifiers":                     "Both",
     "SpaceBeforeAssignmentOperators":                   true,
     "SpaceBeforeCaseColon":                             false,
     "SpaceBeforeCpp11BracedList":                       true,
