@@ -681,30 +681,30 @@ class ToggleFindCaseSensitiveCommand(sublime_plugin.TextCommand):
 
 
 
-import sublime
-import sublime_plugin
+# import sublime
+# import sublime_plugin
 
-class ExpandSelectionToLineUpwardsCommand(sublime_plugin.TextCommand):
-    def run(self, edit, reverse=False):
-        # enable soft-undo line by line
-        sublime.set_timeout(lambda:
-            self.view.run_command("expand_selection_to_line_upwards_atomic",
-                                 {"reverse": reverse}),
-            0)
+# class ExpandSelectionToLineUpwardsCommand(sublime_plugin.TextCommand):
+#     def run(self, edit, reverse=False):
+#         # enable soft-undo line by line
+#         sublime.set_timeout(lambda:
+#             self.view.run_command("expand_selection_to_line_upwards_atomic",
+#                                  {"reverse": reverse}),
+#             0)
 
-class ExpandSelectionToLineUpwardsAtomicCommand(sublime_plugin.TextCommand):
-    def run(self, edit, reverse):
-        for region in self.view.sel():
-            region_begin = region.begin()
-            region_end = region.end()
-            line_begin = self.view.line(region_begin).begin()
-            line_end = self.view.line(region_end).end()
-            # expand to one line below / above if this line has been covered
-            covered = line_begin == region_begin and line_end == region_end
-            if reverse:
-                line_end = self.view.line(region_end + covered).end()
-                new_region = sublime.Region(line_begin, line_end)
-            else:
-                line_begin = self.view.line(region_begin - covered).begin()
-                new_region = sublime.Region(line_end, line_begin)
-            self.view.sel().add(new_region)
+# class ExpandSelectionToLineUpwardsAtomicCommand(sublime_plugin.TextCommand):
+#     def run(self, edit, reverse):
+#         for region in self.view.sel():
+#             region_begin = region.begin()
+#             region_end = region.end()
+#             line_begin = self.view.line(region_begin).begin()
+#             line_end = self.view.line(region_end).end()
+#             # expand to one line below / above if this line has been covered
+#             covered = line_begin == region_begin and line_end == region_end
+#             if reverse:
+#                 line_end = self.view.line(region_end + covered).end()
+#                 new_region = sublime.Region(line_begin, line_end)
+#             else:
+#                 line_begin = self.view.line(region_begin - covered).begin()
+#                 new_region = sublime.Region(line_end, line_begin)
+#             self.view.sel().add(new_region)

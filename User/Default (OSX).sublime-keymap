@@ -227,7 +227,7 @@
     { "keys": ["super+j"], "command": "mark_and_move_do_it_all" },
     // ----------------------------------------------------------------------------------------------------------------
     // { "keys": ["super+l"], "command": "expand_selection", "args": { "to": "line" } },
-    { "keys": ["super+l"], "command": "expand_selection_to_line_upwards", "args": { "reverse": true } },
+    { "keys": ["super+l"], "command": "expand_selection_to_line_downwards" },
     { "keys": ["super+m"], "command": "move_to", "args": { "to": "brackets" } },
     { "keys": ["super+n"], "command": "new_file" },
     // ----- macOS ----------------------------------------------------------------------------------------------------
