@@ -1,0 +1,9 @@
+{
+    "description": "My Own Commands",
+    "platforms": [
+        "*"
+    ],
+    "sublime_text": "*",
+    "url": "Self-Managed",
+    "version": "1.0"
+}

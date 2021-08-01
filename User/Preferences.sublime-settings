@@ -1,0 +1,27 @@
+{
+	"auto_find_in_selection": true,
+	"caret_style": "solid",
+	"close_windows_when_empty": false,
+	"drag_text": false,
+	"ensure_newline_at_eof_on_save": true,
+	"find_selected_text": true,
+	"font_size": 17,
+	"highlight_line": true,
+	"ignored_packages":
+	[
+		"Vintage",
+	],
+	"rulers":
+	[
+		79,
+		80,
+		99,
+		119
+	],
+	"scroll_past_end": true,
+	"show_full_path": true,
+	"tab_size": 2,
+	"translate_tabs_to_spaces": true,
+	"trim_trailing_white_space_on_save": true,
+	"color_scheme": "Packages/Color Scheme - Default/Mariana.sublime-color-scheme",
+}
