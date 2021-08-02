@@ -20,29 +20,34 @@ def get_visual_rows(view):
     return top_row, bottom_row
 
 
-class FindStatusbarCommand(sublime_plugin.EventListener):
-    def on_post_text_command(self, view, command_name, args):
-        c = w = ""
-        if g_find_case_sensitive:
-            c = "[C]"
-        if g_find_whole_word:
-            w = "[W]"
-        status = "{}{}".format(c, w)
-        old_status = view.get_status("find_status")
-        if status != old_status:
-            view.set_status("find_status", status)
+def set_find_status(view):
+    c = w = ""
+    if g_find_case_sensitive:
+        c = "[C]"
+    if g_find_whole_word:
+        w = "[W]"
+    status = "{}{}".format(c, w)
+    view.set_status("find_status", status)
 
 
 class ToggleFindCaseSensitiveCommand(sublime_plugin.TextCommand):
+    def __init__(self, view):
+        super().__init__(view)
+
     def run(self, edit):
         global g_find_case_sensitive
         g_find_case_sensitive = not g_find_case_sensitive
+        set_find_status(self.view)
 
 
 class ToggleFindWholeWordCommand(sublime_plugin.TextCommand):
+    def __init__(self, view):
+        super().__init__(view)
+
     def run(self, edit):
         global g_find_whole_word
         g_find_whole_word = not g_find_whole_word
+        set_find_status(self.view)
 
 
 class DevelopListener(sublime_plugin.EventListener):
