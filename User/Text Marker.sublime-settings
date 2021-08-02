@@ -3,7 +3,7 @@
 */
 {
   "user": {
-    "live": true,
+    "live": false,
     "draw_outlined": false,
     "when_selection_is_empty": false,
     "live_color": "darkturquoise",

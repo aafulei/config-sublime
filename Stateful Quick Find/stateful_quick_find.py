@@ -1,7 +1,6 @@
 import sublime
 import sublime_plugin
 
-# g_find_status_set = False
 g_find_whole_word = False
 g_find_case_sensitive = False
 
@@ -23,18 +22,15 @@ def get_visual_rows(view):
 
 class FindStatusbarCommand(sublime_plugin.EventListener):
     def on_post_text_command(self, view, command_name, args):
-        # global g_find_status_set
-        # commands = ["toggle_find_whole_word", "toggle_find_case_sensitive"]
-        # if g_find_status_set and command_name not in commands:
-        #     return
         c = w = ""
         if g_find_case_sensitive:
             c = "[C]"
         if g_find_whole_word:
             w = "[W]"
         status = "{}{}".format(c, w)
-        view.set_status("find_status", status)
-        # g_find_status_set = True
+        old_status = view.get_status("find_status")
+        if status != old_status:
+            view.set_status("find_status", status)
 
 
 class ToggleFindCaseSensitiveCommand(sublime_plugin.TextCommand):
@@ -49,10 +45,10 @@ class ToggleFindWholeWordCommand(sublime_plugin.TextCommand):
         g_find_whole_word = not g_find_whole_word
 
 
-# class DevelopListener(sublime_plugin.EventListener):
-#     def on_post_text_command(self, view, command_name, args):
-#         if command_name != "develop":
-#             view.erase_regions("current_region")
+class DevelopListener(sublime_plugin.EventListener):
+    def on_post_text_command(self, view, command_name, args):
+        if command_name != "develop":
+            view.erase_regions("current_region")
 
 class DevelopCommand(sublime_plugin.TextCommand):
     def __init__(self, view):
