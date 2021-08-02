@@ -249,7 +249,8 @@
     { "keys": ["super+["], "command": "unindent" },
     { "keys": ["super+]"], "command": "indent" },
     // ----- reserved for develop -------------------------------------------------------------------------------------
-    { "keys": ["super+\\", "super+\\"], "command": "show_overlay", "args": { "overlay": "goto", "text": ":" } },
+    { "keys": ["super+\\"], "command": "show_overlay", "args": { "overlay": "goto", "text": ":" } },
+    { "keys": ["super+\\"], "command": "develop" },
     // ----- [P] My Expand Cut ----------------------------------------------------------------------------------------
     { "keys": ["super+;"], "command": "expand_cut_word" },
 
@@ -451,13 +452,23 @@
     // ========
     // ST4 Tabs
     // ========
-    { "keys": ["super+\\", "super+up"], "command": "unselect_others" },
-    { "keys": ["super+\\", "super+left"], "command": "unselect_to_left" },
-    { "keys": ["super+\\", "super+right"], "command": "unselect_to_right" },
-    { "keys": ["super+\\", "super+shift+left"], "command": "select_to_left" },
-    { "keys": ["super+\\", "super+shift+right"], "command": "select_to_right" },
-    { "keys": ["super+\\", "super+shift+["], "command": "focus_to_left" },
-    { "keys": ["super+\\", "super+shift+]"], "command": "focus_to_right" },
+    // { "keys": ["super+\\", "super+up"], "command": "unselect_others" },
+    // { "keys": ["super+\\", "super+left"], "command": "unselect_to_left" },
+    // { "keys": ["super+\\", "super+right"], "command": "unselect_to_right" },
+    // { "keys": ["super+\\", "super+shift+left"], "command": "select_to_left" },
+    // { "keys": ["super+\\", "super+shift+right"], "command": "select_to_right" },
+    // { "keys": ["super+\\", "super+shift+["], "command": "focus_to_left" },
+    // { "keys": ["super+\\", "super+shift+]"], "command": "focus_to_right" },
+    { "keys": ["super+1"], "command": "focus_by_index", "args": { "index": 0 }, "context": [{ "key": "group_has_multiselect", "operator": "equal", "operand": true }] },
+    { "keys": ["super+2"], "command": "focus_by_index", "args": { "index": 1 }, "context": [{ "key": "group_has_multiselect", "operator": "equal", "operand": true }] },
+    { "keys": ["super+3"], "command": "focus_by_index", "args": { "index": 2 }, "context": [{ "key": "group_has_multiselect", "operator": "equal", "operand": true }] },
+    { "keys": ["super+4"], "command": "focus_by_index", "args": { "index": 3 }, "context": [{ "key": "group_has_multiselect", "operator": "equal", "operand": true }] },
+    { "keys": ["super+5"], "command": "focus_by_index", "args": { "index": 4 }, "context": [{ "key": "group_has_multiselect", "operator": "equal", "operand": true }] },
+    { "keys": ["super+6"], "command": "focus_by_index", "args": { "index": 5 }, "context": [{ "key": "group_has_multiselect", "operator": "equal", "operand": true }] },
+    { "keys": ["super+7"], "command": "focus_by_index", "args": { "index": 6 }, "context": [{ "key": "group_has_multiselect", "operator": "equal", "operand": true }] },
+    { "keys": ["super+8"], "command": "focus_by_index", "args": { "index": 7 }, "context": [{ "key": "group_has_multiselect", "operator": "equal", "operand": true }] },
+    { "keys": ["super+9"], "command": "focus_by_index", "args": { "index": 8 }, "context": [{ "key": "group_has_multiselect", "operator": "equal", "operand": true }] },
+    { "keys": ["super+0"], "command": "focus_by_index", "args": { "index": 9 }, "context": [{ "key": "group_has_multiselect", "operator": "equal", "operand": true }] },
 
 ]
 

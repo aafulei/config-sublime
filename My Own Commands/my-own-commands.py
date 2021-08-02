@@ -25,7 +25,7 @@ Subword
 
 # sublime.log_commands(True)
 
-g_debug_on = False
+g_debug_on = True
 g_trace_on = False
 g_debug_log = print if g_debug_on else lambda *args, **kwargs: None
 g_trace_log = print if g_trace_on else lambda *args, **kwargs: None
@@ -56,12 +56,95 @@ def cycle(sequence):
 
 # ===== Develop =======================================================================================================
 
+class FindStatusbarCommand(sublime_plugin.EventListener):
+    def on_post_text_command(self, view, name, args):
+        if g_find_case_sensitive:
+            find_case_sensitive_s = "C"
+        else:
+            find_case_sensitive_s = "~c"
+        if g_find_whole_word:
+            find_whole_word_s = "W"
+        else:
+            find_whole_word_s = "~w"
+        find_status = "[" + find_case_sensitive_s + "] [" + find_whole_word_s + "]"
+        view.set_status("find_status", find_status)
+
+class ToggleFindWholeWordCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        global g_find_whole_word
+        g_find_whole_word = not g_find_whole_word
+
+class ToggleFindCaseSensitiveCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        global g_find_case_sensitive
+        g_find_case_sensitive = not g_find_case_sensitive
+
+
+class DevelopListener(sublime_plugin.EventListener):
+    # def on_selection_modified_async(self, view):
+    #     view.erase_regions("highlightkey")
+
+    def on_post_text_command(self, view, name, args):
+        print(f"{name=}")
+        if name != "develop":
+            print("DevelopListener: on_post_text_command")
+            view.erase_regions("foootest")
+
 class DevelopCommand(sublime_plugin.TextCommand):
     def __init__(self, view):
         super().__init__(view)
 
     def run(self, edit):
         g_debug_log("develop(): run")
+        # marked = self.view.get_regions("mark")
+        # print(f"{marked=}")
+        print(f"{sublime.LITERAL=}")
+        print(f"{sublime.IGNORECASE=}")
+        sel = self.view.sel()[-1]
+        print(f"{sel.a=}, {sel.b=}")
+        single = False
+        if sel.a == sel.b:
+            single = True
+            self.view.run_command("expand_selection", {"to": "word"})
+        sel = self.view.sel()[-1]
+        txt = self.view.substr(sel)
+        print(f"current sel = {sel}")
+        print(f"txt = {txt}")
+        flag = 0
+        if g_find_case_sensitive:
+            flag &= ~sublime.IGNORECASE
+        else:
+            flag |= sublime.IGNORECASE
+        # Target
+        flag &= ~sublime.LITERAL
+        target = txt
+        if g_find_whole_word:
+            target = "\\b{}\\b".format(txt)
+        print(f"{target=}")
+        print(f"{flag=}")
+        if single:
+            next_region = self.view.find(target, sel.a, flag)
+        else:
+            next_region = self.view.find(target, sel.b + 1, flag)
+        if next_region == sublime.Region(-1, -1):
+            if single:
+                next_region = self.view.find(target, 0, flag)
+            else:
+                next_region = self.view.find(target, 0, flag)
+            if next_region == sublime.Region(-1, -1):
+                return
+        print(f"{next_region=}")
+        next_begin = next_region.begin()
+        (row,col) = self.view.rowcol(next_begin)
+        print(f"next '{txt}' found at line {row+1}")
+        self.view.sel().subtract(sel)
+        self.view.sel().add(next_region)
+        self.view.add_regions("foootest", [next_region], scope="string")
+        # self.view.sel().subtract(next_region)
+        self.view.run_command("show_at_center")
+        # print(f"develop(): return {self.view.sel()[-1].a=}, {self.view.sel()[-1].b=}")
+        print(f"develop(): return")
+
 
 # ===== ToggleLogCommands =======================================================================================================
 
@@ -656,28 +739,7 @@ class NewFileListener(sublime_plugin.EventListener):
 g_find_whole_word = True
 g_find_case_sensitive = True
 
-class FindStatusbarCommand(sublime_plugin.EventListener):
-    def on_post_text_command(self, view, name, args):
-        if g_find_case_sensitive:
-            find_case_sensitive_s = "C"
-        else:
-            find_case_sensitive_s = "~c"
-        if g_find_whole_word:
-            find_whole_word_s = "W"
-        else:
-            find_whole_word_s = "~w"
-        find_status = "[" + find_case_sensitive_s + "] [" + find_whole_word_s + "]"
-        view.set_status("find_status", find_status)
 
-class ToggleFindWholeWordCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        global g_find_whole_word
-        g_find_whole_word = not g_find_whole_word
-
-class ToggleFindCaseSensitiveCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        global g_find_case_sensitive
-        g_find_case_sensitive = not g_find_case_sensitive
 
 
 
