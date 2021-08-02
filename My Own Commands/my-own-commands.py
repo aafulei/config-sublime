@@ -139,7 +139,7 @@ class ToggleLogCommandsCommand(sublime_plugin.WindowCommand):
 
 # ===== Show at Top Center ============================================================================================
 
-# adapted from the Recenter​Top​Bottom Sublime Text 2 plugin by Matt Burrows (mburrows)
+# adapted from the Recenter Top Bottom Sublime Text 2 plugin by Matt Burrows (mburrows)
 # https://github.com/mburrows/RecenterTopBottom
 
 g_show_at_positions = ["top", "center"]

@@ -448,6 +448,17 @@
     { "keys": ["super+k", "super+shift+up"], "command": "carry_file_to_pane", "args": {"direction": "up"} },
     { "keys": ["super+k", "super+shift+down"], "command": "carry_file_to_pane", "args": {"direction": "down"} },
 
+    // ========
+    // ST4 Tabs
+    // ========
+    { "keys": ["super+\\", "super+up"], "command": "unselect_others" },
+    { "keys": ["super+\\", "super+left"], "command": "unselect_to_left" },
+    { "keys": ["super+\\", "super+right"], "command": "unselect_to_right" },
+    { "keys": ["super+\\", "super+shift+left"], "command": "select_to_left" },
+    { "keys": ["super+\\", "super+shift+right"], "command": "select_to_right" },
+    { "keys": ["super+\\", "super+shift+["], "command": "focus_to_left" },
+    { "keys": ["super+\\", "super+shift+]"], "command": "focus_to_right" },
+
 ]
 
 // bug: first line hide_panel expand_subword
