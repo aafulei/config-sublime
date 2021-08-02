@@ -7,6 +7,7 @@
 	[
 		"A File Icon",
 		"AutoHotkey",
+		"AutoPEP8",
 		"ChannelRepositoryTools",
 		"Clang Format",
 		"CMake",
@@ -35,7 +36,9 @@
 		"RemoteSubl",
 		"Save Copy As",
 		"SideBarTools",
+		"Stateful Quick Find",
 		"Switch View in Group",
+		"Text Marker",
 		"ToggleSettings",
 	],
 }

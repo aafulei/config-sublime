@@ -1,0 +1,11 @@
+/*
+  Text Marker user settings in here override the default
+*/
+{
+  "user": {
+    "live": true,
+    "draw_outlined": false,
+    "when_selection_is_empty": false,
+    "live_color": "darkturquoise",
+  }
+}

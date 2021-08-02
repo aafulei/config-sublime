@@ -470,6 +470,9 @@
     { "keys": ["super+9"], "command": "focus_by_index", "args": { "index": 8 }, "context": [{ "key": "group_has_multiselect", "operator": "equal", "operand": true }] },
     { "keys": ["super+0"], "command": "focus_by_index", "args": { "index": 9 }, "context": [{ "key": "group_has_multiselect", "operator": "equal", "operand": true }] },
 
+
+    { "keys": [ "super+k", "super+." ], "command": "text_marker_clear",  },
+    { "keys": [ "super+k", "super+shift+." ], "command": "text_marker",  },
 ]
 
 // bug: first line hide_panel expand_subword

@@ -56,94 +56,97 @@ def cycle(sequence):
 
 # ===== Develop =======================================================================================================
 
-class FindStatusbarCommand(sublime_plugin.EventListener):
-    def on_post_text_command(self, view, name, args):
-        if g_find_case_sensitive:
-            find_case_sensitive_s = "C"
-        else:
-            find_case_sensitive_s = "~c"
-        if g_find_whole_word:
-            find_whole_word_s = "W"
-        else:
-            find_whole_word_s = "~w"
-        find_status = "[" + find_case_sensitive_s + "] [" + find_whole_word_s + "]"
-        view.set_status("find_status", find_status)
+# g_find_whole_word = True
+# g_find_case_sensitive = True
 
-class ToggleFindWholeWordCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        global g_find_whole_word
-        g_find_whole_word = not g_find_whole_word
+# class FindStatusbarCommand(sublime_plugin.EventListener):
+#     def on_post_text_command(self, view, name, args):
+#         if g_find_case_sensitive:
+#             find_case_sensitive_s = "C"
+#         else:
+#             find_case_sensitive_s = "~c"
+#         if g_find_whole_word:
+#             find_whole_word_s = "W"
+#         else:
+#             find_whole_word_s = "~w"
+#         find_status = "[" + find_case_sensitive_s + "] [" + find_whole_word_s + "]"
+#         view.set_status("find_status", find_status)
 
-class ToggleFindCaseSensitiveCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        global g_find_case_sensitive
-        g_find_case_sensitive = not g_find_case_sensitive
+# class ToggleFindWholeWordCommand(sublime_plugin.TextCommand):
+#     def run(self, edit):
+#         global g_find_whole_word
+#         g_find_whole_word = not g_find_whole_word
+
+# class ToggleFindCaseSensitiveCommand(sublime_plugin.TextCommand):
+#     def run(self, edit):
+#         global g_find_case_sensitive
+#         g_find_case_sensitive = not g_find_case_sensitive
 
 
-class DevelopListener(sublime_plugin.EventListener):
-    # def on_selection_modified_async(self, view):
-    #     view.erase_regions("highlightkey")
+# class DevelopListener(sublime_plugin.EventListener):
+#     # def on_selection_modified_async(self, view):
+#     #     view.erase_regions("highlightkey")
 
-    def on_post_text_command(self, view, name, args):
-        print(f"{name=}")
-        if name != "develop":
-            print("DevelopListener: on_post_text_command")
-            view.erase_regions("foootest")
+#     def on_post_text_command(self, view, name, args):
+#         print(f"{name=}")
+#         if name != "develop":
+#             print("DevelopListener: on_post_text_command")
+#             view.erase_regions("foootest")
 
-class DevelopCommand(sublime_plugin.TextCommand):
-    def __init__(self, view):
-        super().__init__(view)
+# class DevelopCommand(sublime_plugin.TextCommand):
+#     def __init__(self, view):
+#         super().__init__(view)
 
-    def run(self, edit):
-        g_debug_log("develop(): run")
-        # marked = self.view.get_regions("mark")
-        # print(f"{marked=}")
-        print(f"{sublime.LITERAL=}")
-        print(f"{sublime.IGNORECASE=}")
-        sel = self.view.sel()[-1]
-        print(f"{sel.a=}, {sel.b=}")
-        single = False
-        if sel.a == sel.b:
-            single = True
-            self.view.run_command("expand_selection", {"to": "word"})
-        sel = self.view.sel()[-1]
-        txt = self.view.substr(sel)
-        print(f"current sel = {sel}")
-        print(f"txt = {txt}")
-        flag = 0
-        if g_find_case_sensitive:
-            flag &= ~sublime.IGNORECASE
-        else:
-            flag |= sublime.IGNORECASE
-        # Target
-        flag &= ~sublime.LITERAL
-        target = txt
-        if g_find_whole_word:
-            target = "\\b{}\\b".format(txt)
-        print(f"{target=}")
-        print(f"{flag=}")
-        if single:
-            next_region = self.view.find(target, sel.a, flag)
-        else:
-            next_region = self.view.find(target, sel.b + 1, flag)
-        if next_region == sublime.Region(-1, -1):
-            if single:
-                next_region = self.view.find(target, 0, flag)
-            else:
-                next_region = self.view.find(target, 0, flag)
-            if next_region == sublime.Region(-1, -1):
-                return
-        print(f"{next_region=}")
-        next_begin = next_region.begin()
-        (row,col) = self.view.rowcol(next_begin)
-        print(f"next '{txt}' found at line {row+1}")
-        self.view.sel().subtract(sel)
-        self.view.sel().add(next_region)
-        self.view.add_regions("foootest", [next_region], scope="string")
-        # self.view.sel().subtract(next_region)
-        self.view.run_command("show_at_center")
-        # print(f"develop(): return {self.view.sel()[-1].a=}, {self.view.sel()[-1].b=}")
-        print(f"develop(): return")
+#     def run(self, edit):
+#         g_debug_log("develop(): run")
+#         # marked = self.view.get_regions("mark")
+#         # print(f"{marked=}")
+#         print(f"{sublime.LITERAL=}")
+#         print(f"{sublime.IGNORECASE=}")
+#         sel = self.view.sel()[-1]
+#         print(f"{sel.a=}, {sel.b=}")
+#         single = False
+#         if sel.a == sel.b:
+#             single = True
+#             self.view.run_command("expand_selection", {"to": "word"})
+#         sel = self.view.sel()[-1]
+#         txt = self.view.substr(sel)
+#         print(f"current sel = {sel}")
+#         print(f"txt = {txt}")
+#         flag = 0
+#         if g_find_case_sensitive:
+#             flag &= ~sublime.IGNORECASE
+#         else:
+#             flag |= sublime.IGNORECASE
+#         # Target
+#         flag &= ~sublime.LITERAL
+#         target = txt
+#         if g_find_whole_word:
+#             target = "\\b{}\\b".format(txt)
+#         print(f"{target=}")
+#         print(f"{flag=}")
+#         if single:
+#             next_region = self.view.find(target, sel.a, flag)
+#         else:
+#             next_region = self.view.find(target, sel.b + 1, flag)
+#         if next_region == sublime.Region(-1, -1):
+#             if single:
+#                 next_region = self.view.find(target, 0, flag)
+#             else:
+#                 next_region = self.view.find(target, 0, flag)
+#             if next_region == sublime.Region(-1, -1):
+#                 return
+#         print(f"{next_region=}")
+#         next_begin = next_region.begin()
+#         (row,col) = self.view.rowcol(next_begin)
+#         print(f"next '{txt}' found at line {row+1}")
+#         self.view.sel().subtract(sel)
+#         self.view.sel().add(next_region)
+#         self.view.add_regions("foootest", [next_region], scope="string")
+#         # self.view.sel().subtract(next_region)
+#         self.view.run_command("show_at_center")
+#         # print(f"develop(): return {self.view.sel()[-1].a=}, {self.view.sel()[-1].b=}")
+#         print(f"develop(): return")
 
 
 # ===== ToggleLogCommands =======================================================================================================
@@ -382,42 +385,42 @@ class Collection():
 
 collection = Collection()
 
-class GotoLastEditCommand(sublime_plugin.TextCommand):
-    def run(self, edit, backward=False):
-        history = collection.get(self.view)
-        g_debug_log("goto_last_edit(): run on view {}".format(self.view.id()))
-        g_debug_log("history.start={}".format(history.start))
-        g_debug_log("history.index={}".format(history.index))
-        g_debug_log("history.max={}".format(history.max))
-        history_range = reversed(range(history.start, history.index + 1))
-        if backward:
-            history_range = range(history.index, history.max + 1)
-        for index in history_range:
-            regions = self.view.get_regions("goto_last_edit_" + str(index))
-            if self.are_regions_equal(regions, self.view.sel()):
-                continue
-            if len(regions) > 0:
-                self.view.sel().clear()
-                self.view.sel().add_all(regions)
-                self.view.show(regions[0])
-                history.index = index
-                break
+# class GotoLastEditCommand(sublime_plugin.TextCommand):
+#     def run(self, edit, backward=False):
+#         history = collection.get(self.view)
+#         g_debug_log("goto_last_edit(): run on view {}".format(self.view.id()))
+#         g_debug_log("history.start={}".format(history.start))
+#         g_debug_log("history.index={}".format(history.index))
+#         g_debug_log("history.max={}".format(history.max))
+#         history_range = reversed(range(history.start, history.index + 1))
+#         if backward:
+#             history_range = range(history.index, history.max + 1)
+#         for index in history_range:
+#             regions = self.view.get_regions("goto_last_edit_" + str(index))
+#             if self.are_regions_equal(regions, self.view.sel()):
+#                 continue
+#             if len(regions) > 0:
+#                 self.view.sel().clear()
+#                 self.view.sel().add_all(regions)
+#                 self.view.show(regions[0])
+#                 history.index = index
+#                 break
 
-    def are_regions_equal(self, regions_1, regions_2):
-        endpoints_1 = [(r.a, r.b) for r in regions_1]
-        endpoints_2 = [(r.a, r.b) for r in regions_2]
-        return endpoints_1 == endpoints_2
+#     def are_regions_equal(self, regions_1, regions_2):
+#         endpoints_1 = [(r.a, r.b) for r in regions_1]
+#         endpoints_2 = [(r.a, r.b) for r in regions_2]
+#         return endpoints_1 == endpoints_2
 
-class ViewWatcher(sublime_plugin.EventListener):
-    def on_modified(self, view):
-        history = collection.get(view)
-        if history.size() >= MAX_HIST_SIZE:
-            oldest = history.remove_oldest()
-            view.erase_regions("goto_last_edit_" + str(oldest))
-        history.increment()
-        new_regions_index = "goto_last_edit_{}".format(history.index)
-        view.add_regions(new_regions_index, view.sel())
-        g_debug_log("add_regions {}".format(new_regions_index))
+# class ViewWatcher(sublime_plugin.EventListener):
+#     def on_modified(self, view):
+#         history = collection.get(view)
+#         if history.size() >= MAX_HIST_SIZE:
+#             oldest = history.remove_oldest()
+#             view.erase_regions("goto_last_edit_" + str(oldest))
+#         history.increment()
+#         new_regions_index = "goto_last_edit_{}".format(history.index)
+#         view.add_regions(new_regions_index, view.sel())
+#         g_debug_log("add_regions {}".format(new_regions_index))
 
 # ===== Expand Cut ====================================================================================================
 
@@ -736,8 +739,7 @@ class NewFileListener(sublime_plugin.EventListener):
         view.settings().set("default_dir", view.window().folders()[0])
 
 
-g_find_whole_word = True
-g_find_case_sensitive = True
+
 
 
 
